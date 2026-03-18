@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local outputs (the canonical copy lives in docs/)
+pro_hockey_vets_*.csv
+
+# IDE
+.vscode/
+.idea/
