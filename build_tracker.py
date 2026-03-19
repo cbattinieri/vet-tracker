@@ -44,6 +44,7 @@ LEAGUE_CSV = {
 }
 
 VET_THRESHOLD = 260
+UFA_THRESHOLD = 190   # Non-Vet UFA: 190–259 career GP
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -122,6 +123,14 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
     cur_gp = df[df["season"] == current_season].groupby("link")["gp"].sum()
     vet_df["active"] = vet_df["link"].map(cur_gp).fillna(0) > 0
 
+    # Non-Vet UFA: 190–259 career GP, not already a veteran
+    vet_df["non_vet_ufa"] = (
+        (vet_df["total_gp"] >= UFA_THRESHOLD) &
+        (vet_df["total_gp"] < VET_THRESHOLD) &
+        (~vet_df["legacy_veteran"]) &
+        (~vet_df["new_veteran"])
+    )
+
     # Clean player name — strip trailing "(POS)" added by scraper
     vet_df["player"] = vet_df["player"].str.replace(r"\s*\([^)]+\)\s*$", "", regex=True).str.strip()
 
@@ -129,7 +138,7 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
         "player", "position", "link",
         "total_gp", "total_g", "total_a", "total_tp", "total_ppg",
         "total_pim", "total_pm",
-        "legacy_veteran", "new_veteran", "league", "active",
+        "legacy_veteran", "new_veteran", "non_vet_ufa", "league", "active",
     ]
     return vet_df[cols]
 
@@ -150,7 +159,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   :root {{
     --bg: #0d1117; --surface: #161b22; --surface2: #1c2330; --border: #2a3441;
     --gold: #e8b84b; --gold-dim: #a07e2a; --green: #2ea043; --red: #da3633;
-    --blue: #58a6ff; --text: #e6edf3; --text-muted: #8b949e;
+    --blue: #58a6ff; --orange: #f0883e; --text: #e6edf3; --text-muted: #8b949e;
   }}
   body {{ font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }}
 
@@ -201,6 +210,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .vb {{ display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:3px 9px;font-size:11px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap; }}
   .vb-legacy {{ background:#2a1f00;border:1px solid var(--gold-dim);color:var(--gold); }}
   .vb-new {{ background:#001828;border:1px solid #1a6b9a;color:var(--blue); }}
+  .vb-ufa {{ background:#1f0e00;border:1px solid #8a4a00;color:var(--orange); }}
   .vb-none {{ background:transparent;border:1px solid var(--border);color:var(--text-muted); }}
   .dot {{ display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px; }}
   .dot-on {{ background:var(--green);box-shadow:0 0 6px var(--green); }} .dot-off {{ background:var(--border); }}
@@ -232,12 +242,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <div class="stat-card"><div class="num num-white">{total}</div><div class="label">Total Players</div></div>
   <div class="stat-card"><div class="num num-gold">{legacy}</div><div class="label">Legacy Veterans</div></div>
   <div class="stat-card"><div class="num num-blue">{new_vets}</div><div class="label">New Veterans</div></div>
+  <div class="stat-card"><div class="num" style="color:var(--orange)">{ufa_count}</div><div class="label">Non-Vet UFAs</div></div>
   <div class="stat-card"><div class="num num-green">{active}</div><div class="label">Active This Season</div></div>
 </div>
 
 <div class="threshold-note">
   <strong>Veteran threshold: 260 career GP</strong> across NHL · AHL · ECHL · KHL · SHL · Liiga · Czechia · Slovakia · DEL · NL. &nbsp;
-  <strong>Legacy</strong> = crossed threshold before {season}. &nbsp;<strong>New Vet</strong> = crossed threshold during {season}.
+  <strong>Legacy</strong> = crossed threshold before {season}. &nbsp;<strong>New Vet</strong> = crossed threshold during {season}. &nbsp;
+  <strong style="color:var(--orange)">Non-Vet UFA</strong> = 190–259 career GP (UFA-eligible but not yet a veteran).
 </div>
 
 <div class="controls">
@@ -252,7 +264,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <option value="legacy">⭐ Legacy Veterans</option>
       <option value="new">🆕 New Veterans</option>
       <option value="any">Any Veteran</option>
-      <option value="none">Non-Veterans</option>
+      <option value="ufa">🟠 Non-Vet UFA (190–259 GP)</option>
+      <option value="none">Under Threshold (&lt;190 GP)</option>
     </select>
   </div>
   <div class="control-group">
@@ -312,7 +325,7 @@ const LG={{'nhl':'NHL','ahl':'AHL','echl':'ECHL','khl':'KHL','shl':'SHL','liiga'
 let sc='total_gp',sa=false,filtered=[],shown=200;
 function isF(p){{if(!p)return false;const u=p.toUpperCase();return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,''));}}
 function isD(p){{return p&&/\\bD\\b/.test(p.toUpperCase());}}
-function vs(r){{return r.legacy_veteran?'legacy':r.new_veteran?'new':'none';}}
+function vs(r){{return r.legacy_veteran?'legacy':r.new_veteran?'new':r.non_vet_ufa?'ufa':'none';}}
 function applyFilters(){{
   const s=document.getElementById('search').value.trim().toLowerCase();
   const fv=document.getElementById('fv').value;
@@ -324,7 +337,8 @@ function applyFilters(){{
     const v=vs(r);
     if(fv==='legacy'&&v!=='legacy')return false;
     if(fv==='new'&&v!=='new')return false;
-    if(fv==='any'&&v==='none')return false;
+    if(fv==='any'&&v!=='legacy'&&v!=='new')return false;
+    if(fv==='ufa'&&v!=='ufa')return false;
     if(fv==='none'&&v!=='none')return false;
     if(fl&&r.league!==fl)return false;
     if(fp==='F'&&!isF(r.position))return false;
@@ -356,6 +370,7 @@ function vetB(r){{
   const v=vs(r);
   if(v==='legacy')return'<span class="vb vb-legacy">⭐ Veteran</span>';
   if(v==='new')return'<span class="vb vb-new">🆕 New Vet</span>';
+  if(v==='ufa')return`<span class="vb vb-ufa">🟠 Non-Vet UFA</span>`;
   return`<span class="vb vb-none">${{r.total_gp}}/260</span>`;
 }}
 function gpB(gp){{
@@ -416,6 +431,7 @@ def build_html(vet_df: pd.DataFrame, current_season: str) -> str:
 
     legacy_count  = int(vet_df["legacy_veteran"].sum())
     new_count     = int(vet_df["new_veteran"].sum())
+    ufa_count     = int(vet_df["non_vet_ufa"].sum())
     active_count  = int(vet_df["active"].sum())
     total_count   = len(vet_df)
     updated       = date.today().strftime("%B %d, %Y")
@@ -428,6 +444,7 @@ def build_html(vet_df: pd.DataFrame, current_season: str) -> str:
         total      = f"{total_count:,}",
         legacy     = f"{legacy_count:,}",
         new_vets   = f"{new_count:,}",
+        ufa_count  = f"{ufa_count:,}",
         active     = f"{active_count:,}",
     )
     return html
@@ -467,6 +484,7 @@ def main():
     print(f"  Players in database:  {len(vet_df):,}")
     print(f"  Legacy veterans:      {vet_df['legacy_veteran'].sum():,}")
     print(f"  New veterans:         {vet_df['new_veteran'].sum():,}")
+    print(f"  Non-Vet UFAs:         {vet_df['non_vet_ufa'].sum():,}")
     print(f"  Active this season:   {vet_df['active'].sum():,}\n")
 
     # 6. Write HTML to docs/index.html (served by GitHub Pages)
