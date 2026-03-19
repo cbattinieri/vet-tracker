@@ -46,6 +46,22 @@ LEAGUE_CSV = {
 VET_THRESHOLD = 260
 UFA_THRESHOLD = 190   # Non-Vet UFA: 190–259 career GP
 
+# NHLe conversion factors — applied per season-league row before career aggregation.
+# Source: Desjardins / Bacon / Vollman consensus estimates.
+# NHL = 1.0 by definition; ECHL is the baseline for this tracker.
+NHLE_FACTORS = {
+    "nhl":      1.00,
+    "khl":      0.62,
+    "ahl":      0.44,
+    "shl":      0.43,
+    "liiga":    0.42,
+    "nl":       0.40,
+    "del":      0.37,
+    "czechia":  0.37,
+    "slovakia": 0.28,
+    "echl":     0.27,
+}
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -101,22 +117,41 @@ def compute_veterans(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
 
 
 def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
+    # Apply NHLe factor per season-league row BEFORE aggregating —
+    # this gives a true career NHLe stat line weighted by league strength.
+    df = df.copy()
+    df["nhle_factor"] = df["league"].map(NHLE_FACTORS).fillna(0.27)
+    df["nhle_g"]  = (df["g"]  * df["nhle_factor"])
+    df["nhle_a"]  = (df["a"]  * df["nhle_factor"])
+    df["nhle_tp"] = (df["tp"] * df["nhle_factor"])
+
     df_sorted = df.sort_values("season", ascending=False)
 
     vet_df = df_sorted.groupby(["player", "position", "link"]).agg(
-        total_gp        =("gp",              "sum"),
-        total_g         =("g",               "sum"),
-        total_a         =("a",               "sum"),
-        total_tp        =("tp",              "sum"),
-        total_pim       =("pim",             "sum"),
-        total_pm        =("+/-",             "sum"),
-        legacy_veteran  =("legacy_veteran",  "first"),
-        new_veteran     =("new_veteran",     "first"),
-        league          =("league",          "first"),
+        total_gp        =("gp",             "sum"),
+        total_g         =("g",              "sum"),
+        total_a         =("a",              "sum"),
+        total_tp        =("tp",             "sum"),
+        total_pim       =("pim",            "sum"),
+        total_pm        =("+/-",            "sum"),
+        nhle_g          =("nhle_g",         "sum"),
+        nhle_a          =("nhle_a",         "sum"),
+        nhle_tp         =("nhle_tp",        "sum"),
+        legacy_veteran  =("legacy_veteran", "first"),
+        new_veteran     =("new_veteran",    "first"),
+        league          =("league",         "first"),
     ).reset_index()
 
     vet_df["total_ppg"] = (
         vet_df["total_tp"] / vet_df["total_gp"].replace(0, 1)
+    ).round(2)
+
+    # Round NHLe counting stats and compute NHLe PPG
+    vet_df["nhle_g"]   = vet_df["nhle_g"].round(1)
+    vet_df["nhle_a"]   = vet_df["nhle_a"].round(1)
+    vet_df["nhle_tp"]  = vet_df["nhle_tp"].round(1)
+    vet_df["nhle_ppg"] = (
+        vet_df["nhle_tp"] / vet_df["total_gp"].replace(0, 1)
     ).round(2)
 
     # Active = played at least 1 GP in current season
@@ -138,6 +173,7 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
         "player", "position", "link",
         "total_gp", "total_g", "total_a", "total_tp", "total_ppg",
         "total_pim", "total_pm",
+        "nhle_g", "nhle_a", "nhle_tp", "nhle_ppg",
         "legacy_veteran", "new_veteran", "non_vet_ufa", "league", "active",
     ]
     return vet_df[cols]
@@ -219,7 +255,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .gp-fill {{ height:100%;border-radius:3px; }}
   .fill-gold {{ background:var(--gold); }} .fill-grn {{ background:var(--green); }} .fill-mut {{ background:var(--text-muted); }}
   .sn {{ font-family:'Barlow Condensed',sans-serif;font-size:14px; }}
-  .sn-hi {{ color:var(--text);font-weight:600; }} .sn-ppg {{ color:var(--gold); }}
+  .sn-hi {{ color:var(--text);font-weight:600; }} .sn-ppg {{ color:var(--gold); }} .sn-nhle {{ color:#7dd3fc; }}
+
+  /* Tab toggle */
+  .tab-bar {{ display:flex;align-items:center;gap:0;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px; }}
+  .tab-btn {{ font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:12px 20px;border:none;border-bottom:3px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s;margin-bottom:-1px; }}
+  .tab-btn:hover {{ color:var(--text); }}
+  .tab-btn.active {{ color:var(--gold);border-bottom-color:var(--gold); }}
+  .tab-note {{ margin-left:auto;font-size:11px;color:var(--text-muted);padding:12px 0; }}
   .no-results {{ text-align:center;padding:60px 20px;color:var(--text-muted);font-size:16px; }}
   .no-results .ico {{ font-size:48px;margin-bottom:12px; }}
 </style>
@@ -299,9 +342,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <div class="results-count">Showing <span id="rc">—</span> players</div>
 </div>
 
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-std" onclick="switchTab('std')">📊 Standard Stats</button>
+  <button class="tab-btn" id="tab-nhle" onclick="switchTab('nhle')">🏒 NHLe Stats</button>
+  <span class="tab-note" id="tab-note">Career totals · GP, G, A, PTS, PPG, PIM, +/−</span>
+</div>
+
 <div class="table-wrap">
   <table>
-    <thead><tr>
+    <thead id="thead-std"><tr>
       <th onclick="sort('player')" data-c="player">Player <span class="arr">↕</span></th>
       <th onclick="sort('position')" data-c="position">Pos <span class="arr">↕</span></th>
       <th onclick="sort('league')" data-c="league">League <span class="arr">↕</span></th>
@@ -311,7 +360,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <th onclick="sort('total_tp')" data-c="total_tp">PTS <span class="arr">↕</span></th>
       <th onclick="sort('total_ppg')" data-c="total_ppg">PPG <span class="arr">↕</span></th>
       <th onclick="sort('total_pim')" data-c="total_pim">PIM <span class="arr">↕</span></th>
-      <th onclick="sort('legacy_veteran')" data-c="legacy_veteran">Vet Status <span class="arr">↕</span></th>
+      <th onclick="sort('total_pm')" data-c="total_pm">+/− <span class="arr">↕</span></th>
+      <th onclick="sort('legacy_veteran')" data-c="legacy_veteran">Status <span class="arr">↕</span></th>
+      <th onclick="sort('active')" data-c="active">Active <span class="arr">↕</span></th>
+    </tr></thead>
+    <thead id="thead-nhle" style="display:none"><tr>
+      <th onclick="sort('player')" data-c="player">Player <span class="arr">↕</span></th>
+      <th onclick="sort('position')" data-c="position">Pos <span class="arr">↕</span></th>
+      <th onclick="sort('league')" data-c="league">League <span class="arr">↕</span></th>
+      <th onclick="sort('total_gp')" data-c="total_gp">GP <span class="arr">↕</span></th>
+      <th onclick="sort('nhle_g')" data-c="nhle_g">NHLe G <span class="arr">↕</span></th>
+      <th onclick="sort('nhle_a')" data-c="nhle_a">NHLe A <span class="arr">↕</span></th>
+      <th onclick="sort('nhle_tp')" data-c="nhle_tp">NHLe PTS <span class="arr">↕</span></th>
+      <th onclick="sort('nhle_ppg')" data-c="nhle_ppg">NHLe PPG <span class="arr">↕</span></th>
+      <th onclick="sort('legacy_veteran')" data-c="legacy_veteran">Status <span class="arr">↕</span></th>
       <th onclick="sort('active')" data-c="active">Active <span class="arr">↕</span></th>
     </tr></thead>
     <tbody id="tb"></tbody>
@@ -322,10 +384,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <script>
 const D={json_data};
 const LG={{'nhl':'NHL','ahl':'AHL','echl':'ECHL','khl':'KHL','shl':'SHL','liiga':'Liiga','czechia':'Czechia','slovakia':'Slovakia','del':'DEL','nl':'NL'}};
-let sc='total_gp',sa=false,filtered=[],shown=200;
+const NHLE_NOTE='NHLe normalizes scoring across leagues · career totals weighted by league strength (KHL=0.62, AHL=0.44, SHL=0.43, Liiga=0.42, NL=0.40, DEL/Czechia=0.37, Slovakia=0.28, ECHL=0.27)';
+const STD_NOTE='Career totals · GP, G, A, PTS, PPG, PIM, +/−';
+let sc='total_gp',sa=false,filtered=[],shown=200,curTab='std';
 function isF(p){{if(!p)return false;const u=p.toUpperCase();return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,''));}}
 function isD(p){{return p&&/\\bD\\b/.test(p.toUpperCase());}}
 function vs(r){{return r.legacy_veteran?'legacy':r.new_veteran?'new':r.non_vet_ufa?'ufa':'none';}}
+function switchTab(tab){{
+  curTab=tab;
+  document.getElementById('tab-std').classList.toggle('active',tab==='std');
+  document.getElementById('tab-nhle').classList.toggle('active',tab==='nhle');
+  document.getElementById('thead-std').style.display=tab==='std'?'':'none';
+  document.getElementById('thead-nhle').style.display=tab==='nhle'?'':'none';
+  document.getElementById('tab-note').textContent=tab==='nhle'?NHLE_NOTE:STD_NOTE;
+  if(tab==='nhle'&&sc==='total_tp')sc='nhle_tp';
+  if(tab==='std'&&sc==='nhle_tp')sc='total_tp';
+  sortArr();render();
+}}
 function applyFilters(){{
   const s=document.getElementById('search').value.trim().toLowerCase();
   const fv=document.getElementById('fv').value;
@@ -360,9 +435,8 @@ function sortArr(){{
 }}
 function sort(col){{
   if(sc===col)sa=!sa;else{{sc=col;sa=false;}}
-  document.querySelectorAll('th').forEach(t=>{{t.classList.remove('sorted');t.querySelector('.arr').textContent='↕';}});
-  const th=document.querySelector(`th[data-c="${{col}}"]`);
-  if(th){{th.classList.add('sorted');th.querySelector('.arr').textContent=sa?'↑':'↓';}}
+  document.querySelectorAll('th').forEach(t=>{{t.classList.remove('sorted');const a=t.querySelector('.arr');if(a)a.textContent='↕';}});
+  document.querySelectorAll(`th[data-c="${{col}}"]`).forEach(th=>{{th.classList.add('sorted');th.querySelector('.arr').textContent=sa?'↑':'↓';}});
   sortArr();render();
 }}
 function lgB(lg){{return `<span class="lg lg-${{lg}}">${{LG[lg]||lg.toUpperCase()}}</span>`;}}
@@ -370,7 +444,7 @@ function vetB(r){{
   const v=vs(r);
   if(v==='legacy')return'<span class="vb vb-legacy">⭐ Veteran</span>';
   if(v==='new')return'<span class="vb vb-new">🆕 New Vet</span>';
-  if(v==='ufa')return`<span class="vb vb-ufa">🟠 Non-Vet UFA</span>`;
+  if(v==='ufa')return'<span class="vb vb-ufa">🟠 Non-Vet UFA</span>';
   return`<span class="vb vb-none">${{r.total_gp}}/260</span>`;
 }}
 function gpB(gp){{
@@ -378,45 +452,40 @@ function gpB(gp){{
   const c=gp>=260?'fill-gold':gp>=200?'fill-grn':'fill-mut';
   return`<div class="gp-wrap"><span class="sn sn-hi">${{gp}}</span><div class="gp-bg"><div class="gp-fill ${{c}}" style="width:${{p}}%"></div></div></div>`;
 }}
+function pmCell(pm){{
+  const col=pm>0?'color:var(--green)':pm<0?'color:var(--red)':'color:var(--text-muted)';
+  return`<span class="sn" style="${{col}}">${{pm>0?'+'+pm:pm}}</span>`;
+}}
 function render(){{
   const tb=document.getElementById('tb');
   const nr=document.getElementById('nr');
+  const isNhle=curTab==='nhle';
   document.getElementById('rc').textContent=filtered.length.toLocaleString();
   if(!filtered.length){{tb.innerHTML='';nr.style.display='block';return;}}
   nr.style.display='none';
-  const rows=filtered.slice(0,shown).map(r=>`<tr>
-    <td class="player-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></td>
-    <td><span class="pos-badge">${{r.position||'—'}}</span></td>
-    <td>${{lgB(r.league)}}</td>
-    <td>${{gpB(r.total_gp)}}</td>
-    <td class="sn">${{r.total_g}}</td>
-    <td class="sn">${{r.total_a}}</td>
-    <td class="sn sn-hi">${{r.total_tp}}</td>
-    <td class="sn ${{r.total_ppg>=0.75?'sn-ppg':''}}">${{r.total_ppg.toFixed(2)}}</td>
-    <td class="sn">${{r.total_pim}}</td>
-    <td>${{vetB(r)}}</td>
-    <td><span class="dot ${{r.active?'dot-on':'dot-off'}}"></span>${{r.active?'Active':'<span style="color:var(--text-muted)">Inactive</span>'}}</td>
-  </tr>`).join('');
+  const rows=filtered.slice(0,shown).map(r=>{{
+    const base=`<td class="player-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></td><td><span class="pos-badge">${{r.position||'—'}}</span></td><td>${{lgB(r.league)}}</td><td>${{gpB(r.total_gp)}}</td>`;
+    const std=`<td class="sn">${{r.total_g}}</td><td class="sn">${{r.total_a}}</td><td class="sn sn-hi">${{r.total_tp}}</td><td class="sn ${{r.total_ppg>=0.75?'sn-ppg':''}}">${{r.total_ppg.toFixed(2)}}</td><td class="sn">${{r.total_pim}}</td><td>${{pmCell(r.total_pm)}}</td>`;
+    const nhle=`<td class="sn sn-nhle">${{r.nhle_g.toFixed(1)}}</td><td class="sn sn-nhle">${{r.nhle_a.toFixed(1)}}</td><td class="sn sn-nhle" style="font-weight:600">${{r.nhle_tp.toFixed(1)}}</td><td class="sn ${{r.nhle_ppg>=0.40?'sn-ppg':''}}">${{r.nhle_ppg.toFixed(2)}}</td>`;
+    const tail=`<td>${{vetB(r)}}</td><td><span class="dot ${{r.active?'dot-on':'dot-off'}}"></span>${{r.active?'Active':'<span style="color:var(--text-muted)">Inactive</span>'}}</td>`;
+    return`<tr>${{base}}${{isNhle?nhle:std}}${{tail}}</tr>`;
+  }}).join('');
   tb.innerHTML=rows;
   if(filtered.length>shown){{
     const rem=filtered.length-shown;
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td colspan="11" style="text-align:center;padding:16px">
-      <button onclick="loadMore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:Barlow,sans-serif;font-size:13px;padding:8px 24px;border-radius:6px;cursor:pointer">
-        Load ${{Math.min(rem,200)}} more (${{rem}} remaining)
-      </button></td>`;
+    tr.innerHTML=`<td colspan="${{isNhle?10:12}}" style="text-align:center;padding:16px"><button onclick="loadMore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:Barlow,sans-serif;font-size:13px;padding:8px 24px;border-radius:6px;cursor:pointer">Load ${{Math.min(rem,200)}} more (${{rem}} remaining)</button></td>`;
     tb.appendChild(tr);
   }}
 }}
 function loadMore(){{shown+=200;render();}}
 function reset(){{
-  ['search','fv','fl','fp','fa'].forEach(id=>{{const e=document.getElementById(id);e.tagName==='INPUT'?e.value='':e.value='';if(e.tagName==='SELECT')e.selectedIndex=0;}});
+  ['search','fv','fl','fp','fa'].forEach(id=>{{const e=document.getElementById(id);if(e.tagName==='INPUT')e.value='';else e.selectedIndex=0;}});
   document.getElementById('fv').value='any';
   applyFilters();
 }}
 ['search'].forEach(id=>document.getElementById(id).addEventListener('input',applyFilters));
 ['fv','fl','fp','fa'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
-// Boot: default to all veterans, sorted by GP desc
 document.getElementById('fv').value='any';
 applyFilters();
 </script>
