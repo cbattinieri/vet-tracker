@@ -201,8 +201,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
   .header {{ background: linear-gradient(135deg,#0d1117 0%,#1a2030 50%,#0d1117 100%); border-bottom: 2px solid var(--gold); padding: 20px 32px; display: flex; align-items: center; gap: 20px; }}
   .header-icon {{ width:48px;height:48px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0; }}
-  .header-text h1 {{ font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:1px;text-transform:uppercase; }}
-  .header-text p {{ font-size:13px;color:var(--text-muted);margin-top:2px; }}
+  .header-text {{ display:flex;flex-direction:column;gap:3px; }}
+  .header-title-row {{ display:flex;align-items:center;gap:10px; }}
+  .header-text h1 {{ font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text); }}
+  .header-text .brand {{ font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold); }}
+  .info-btn {{ display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--text-muted);color:var(--text-muted);font-size:11px;font-weight:700;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s;font-family:'Barlow Condensed',sans-serif; }}
+  .info-btn:hover {{ border-color:var(--gold);color:var(--gold); }}
+  .info-tooltip {{ display:none;position:absolute;top:26px;left:50%;transform:translateX(-50%);background:#1c2330;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--text-muted);white-space:nowrap;z-index:100;pointer-events:none; }}
+  .info-btn:hover .info-tooltip {{ display:block; }}
   .header-meta {{ margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px; }}
   .header-season {{ background:var(--surface2);border:1px solid var(--gold-dim);border-radius:6px;padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:1px; }}
   .header-updated {{ font-size:11px;color:var(--text-muted); }}
@@ -272,8 +278,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <div class="header">
   <div class="header-icon">🏒</div>
   <div class="header-text">
-    <h1>Pro Hockey Veteran Tracker</h1>
-    <p>ECHL veteran status · 260 career GP threshold across 10 pro leagues</p>
+    <div class="header-title-row">
+      <h1>Pro Hockey Veteran Tracker</h1>
+      <div class="info-btn">i
+        <div class="info-tooltip">ECHL veteran status · 260 career GP threshold across NHL, AHL, ECHL, KHL, SHL, Liiga, Czechia, Slovakia, DEL &amp; NL</div>
+      </div>
+    </div>
+    <div class="brand">Batt Analytics</div>
   </div>
   <div class="header-meta">
     <div class="header-season">{season} SEASON</div>
