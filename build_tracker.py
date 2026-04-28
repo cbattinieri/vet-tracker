@@ -62,6 +62,19 @@ NHLE_FACTORS = {
     "echl":     0.27,
 }
 
+# League tier for sorting call-up/send-down display (lower = higher tier)
+LEAGUE_TIER = {
+    "nhl": 1, "khl": 2, "ahl": 2,
+    "shl": 3, "liiga": 3, "echl": 3,
+    "del": 4, "czechia": 4, "nl": 4, "slovakia": 4,
+}
+
+LEAGUE_LABELS = {
+    "nhl": "NHL", "ahl": "AHL", "echl": "ECHL", "khl": "KHL",
+    "shl": "SHL", "liiga": "Liiga", "czechia": "Czechia",
+    "slovakia": "Slovakia", "del": "DEL", "nl": "NL",
+}
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -158,6 +171,21 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
     cur_gp = df[df["season"] == current_season].groupby("link")["gp"].sum()
     vet_df["active"] = vet_df["link"].map(cur_gp).fillna(0) > 0
 
+    # Call-Up / Send-Down: all leagues in each player's most recent season.
+    # Uses hybrid fallback — if not in current season, uses last season they appeared.
+    # Shows "—" for players who only played in one league that season.
+    most_recent_season = df.groupby("link")["season"].max()
+    df["_mrs"] = df["link"].map(most_recent_season)
+    mrs_df = df[df["season"] == df["_mrs"]]
+    cusd_map = mrs_df.groupby("link")["league"].apply(
+        lambda x: sorted(set(x), key=lambda lg: LEAGUE_TIER.get(lg, 99))
+    )
+    def fmt_cusd(lgs):
+        if len(lgs) < 2:
+            return "—"
+        return " · ".join(LEAGUE_LABELS.get(lg, lg.upper()) for lg in lgs)
+    vet_df["call_up_send_down"] = vet_df["link"].map(cusd_map).map(fmt_cusd).fillna("—")
+
     # Non-Vet UFA: 190–259 career GP, not already a veteran
     vet_df["non_vet_ufa"] = (
         (vet_df["total_gp"] >= UFA_THRESHOLD) &
@@ -174,7 +202,8 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
         "total_gp", "total_g", "total_a", "total_tp", "total_ppg",
         "total_pim", "total_pm",
         "nhle_g", "nhle_a", "nhle_tp", "nhle_ppg",
-        "legacy_veteran", "new_veteran", "non_vet_ufa", "league", "active",
+        "legacy_veteran", "new_veteran", "non_vet_ufa",
+        "league", "call_up_send_down", "active",
     ]
     return vet_df[cols]
 
@@ -226,6 +255,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   input[type="text"] {{ min-width:260px; }}
   input[type="text"]:focus, select:focus {{ border-color:var(--gold); }}
   select {{ cursor:pointer;min-width:140px; }}
+  /* Custom multiselect */
+  .ms-wrap {{ position:relative; }}
+  .ms-trigger {{ background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:8px 28px 8px 12px;cursor:pointer;min-width:160px;text-align:left;transition:border-color .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;width:100%; }}
+  .ms-trigger:focus,.ms-trigger.open {{ border-color:var(--gold); }}
+  .ms-trigger::after {{ content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none; }}
+  .ms-dropdown {{ display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface2);border:1px solid var(--border);border-radius:6px;min-width:160px;z-index:200;padding:4px 0;box-shadow:0 8px 24px rgba(0,0,0,.4); }}
+  .ms-wrap.open .ms-dropdown {{ display:block; }}
+  .ms-option {{ display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:13px;transition:background .1s; }}
+  .ms-option:hover {{ background:var(--surface); }}
+  .ms-option input[type=checkbox] {{ accent-color:var(--gold);width:13px;height:13px;cursor:pointer;flex-shrink:0; }}
+  .ms-option.selected {{ color:var(--gold); }}
   .btn-reset {{ background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;transition:all .2s;align-self:flex-end; }}
   .btn-reset:hover {{ border-color:var(--gold);color:var(--gold); }}
   .results-count {{ margin-left:auto;align-self:flex-end;font-size:13px;color:var(--text-muted);white-space:nowrap; }}
@@ -323,14 +363,38 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </select>
   </div>
   <div class="control-group">
-    <label>League</label>
-    <select id="fl">
-      <option value="">All Leagues</option>
-      <option value="nhl">NHL</option><option value="ahl">AHL</option>
-      <option value="echl">ECHL</option><option value="khl">KHL</option>
-      <option value="shl">SHL</option><option value="liiga">Liiga</option>
-      <option value="czechia">Czechia</option><option value="slovakia">Slovakia</option>
-      <option value="del">DEL</option><option value="nl">NL</option>
+    <label>Current League</label>
+    <div class="ms-wrap" id="ms-league">
+      <button class="ms-trigger" id="ms-league-trigger" onclick="toggleMs('ms-league')">All Leagues</button>
+      <div class="ms-dropdown">
+        <div class="ms-option" onclick="toggleLeague('nhl',this)"><input type="checkbox" value="nhl"> NHL</div>
+        <div class="ms-option" onclick="toggleLeague('ahl',this)"><input type="checkbox" value="ahl"> AHL</div>
+        <div class="ms-option" onclick="toggleLeague('echl',this)"><input type="checkbox" value="echl"> ECHL</div>
+        <div class="ms-option" onclick="toggleLeague('khl',this)"><input type="checkbox" value="khl"> KHL</div>
+        <div class="ms-option" onclick="toggleLeague('shl',this)"><input type="checkbox" value="shl"> SHL</div>
+        <div class="ms-option" onclick="toggleLeague('liiga',this)"><input type="checkbox" value="liiga"> Liiga</div>
+        <div class="ms-option" onclick="toggleLeague('czechia',this)"><input type="checkbox" value="czechia"> Czechia</div>
+        <div class="ms-option" onclick="toggleLeague('slovakia',this)"><input type="checkbox" value="slovakia"> Slovakia</div>
+        <div class="ms-option" onclick="toggleLeague('del',this)"><input type="checkbox" value="del"> DEL</div>
+        <div class="ms-option" onclick="toggleLeague('nl',this)"><input type="checkbox" value="nl"> NL</div>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label>Call-Up / Send-Down</label>
+    <select id="fcusd">
+      <option value="">All Players</option>
+      <option value="any">Any Movement</option>
+      <option value="nhl">Includes NHL</option>
+      <option value="ahl">Includes AHL</option>
+      <option value="echl">Includes ECHL</option>
+      <option value="khl">Includes KHL</option>
+      <option value="shl">Includes SHL</option>
+      <option value="liiga">Includes Liiga</option>
+      <option value="czechia">Includes Czechia</option>
+      <option value="slovakia">Includes Slovakia</option>
+      <option value="del">Includes DEL</option>
+      <option value="nl">Includes NL</option>
     </select>
   </div>
   <div class="control-group">
@@ -364,7 +428,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <thead id="thead-std"><tr>
       <th onclick="sort('player')" data-c="player">Player <span class="arr">↕</span></th>
       <th onclick="sort('position')" data-c="position">Pos <span class="arr">↕</span></th>
-      <th onclick="sort('league')" data-c="league">League <span class="arr">↕</span></th>
+      <th onclick="sort('league')" data-c="league">Current League <span class="arr">↕</span></th>
       <th onclick="sort('total_gp')" data-c="total_gp">GP <span class="arr">↕</span></th>
       <th onclick="sort('total_g')" data-c="total_g">G <span class="arr">↕</span></th>
       <th onclick="sort('total_a')" data-c="total_a">A <span class="arr">↕</span></th>
@@ -372,18 +436,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <th onclick="sort('total_ppg')" data-c="total_ppg">PPG <span class="arr">↕</span></th>
       <th onclick="sort('total_pim')" data-c="total_pim">PIM <span class="arr">↕</span></th>
       <th onclick="sort('total_pm')" data-c="total_pm">+/− <span class="arr">↕</span></th>
+      <th onclick="sort('call_up_send_down')" data-c="call_up_send_down">Call-Up / Send-Down <span class="arr">↕</span></th>
       <th onclick="sort('legacy_veteran')" data-c="legacy_veteran">Status <span class="arr">↕</span></th>
       <th onclick="sort('active')" data-c="active">Active <span class="arr">↕</span></th>
     </tr></thead>
     <thead id="thead-nhle" style="display:none"><tr>
       <th onclick="sort('player')" data-c="player">Player <span class="arr">↕</span></th>
       <th onclick="sort('position')" data-c="position">Pos <span class="arr">↕</span></th>
-      <th onclick="sort('league')" data-c="league">League <span class="arr">↕</span></th>
+      <th onclick="sort('league')" data-c="league">Current League <span class="arr">↕</span></th>
       <th onclick="sort('total_gp')" data-c="total_gp">GP <span class="arr">↕</span></th>
       <th onclick="sort('nhle_g')" data-c="nhle_g">NHLe G <span class="arr">↕</span></th>
       <th onclick="sort('nhle_a')" data-c="nhle_a">NHLe A <span class="arr">↕</span></th>
       <th onclick="sort('nhle_tp')" data-c="nhle_tp">NHLe PTS <span class="arr">↕</span></th>
       <th onclick="sort('nhle_ppg')" data-c="nhle_ppg">NHLe PPG <span class="arr">↕</span></th>
+      <th onclick="sort('call_up_send_down')" data-c="call_up_send_down">Call-Up / Send-Down <span class="arr">↕</span></th>
       <th onclick="sort('legacy_veteran')" data-c="legacy_veteran">Status <span class="arr">↕</span></th>
       <th onclick="sort('active')" data-c="active">Active <span class="arr">↕</span></th>
     </tr></thead>
@@ -398,9 +464,35 @@ const LG={{'nhl':'NHL','ahl':'AHL','echl':'ECHL','khl':'KHL','shl':'SHL','liiga'
 const NHLE_NOTE='NHLe normalizes scoring across leagues · career totals weighted by league strength (KHL=0.62, AHL=0.44, SHL=0.43, Liiga=0.42, NL=0.40, DEL/Czechia=0.37, Slovakia=0.28, ECHL=0.27)';
 const STD_NOTE='Career totals · GP, G, A, PTS, PPG, PIM, +/−';
 let sc='total_gp',sa=false,filtered=[],shown=200,curTab='std';
+let selectedLeagues=new Set();
+
+// --- Multiselect ---
+function toggleMs(id){{
+  const wrap=document.getElementById(id);
+  wrap.classList.toggle('open');
+  document.getElementById(id+'-trigger').classList.toggle('open',wrap.classList.contains('open'));
+}}
+function toggleLeague(val,el){{
+  const cb=el.querySelector('input[type=checkbox]');
+  cb.checked=!cb.checked;
+  if(cb.checked){{selectedLeagues.add(val);el.classList.add('selected');}}
+  else{{selectedLeagues.delete(val);el.classList.remove('selected');}}
+  const trigger=document.getElementById('ms-league-trigger');
+  trigger.textContent=selectedLeagues.size===0?'All Leagues':[...selectedLeagues].map(v=>LG[v]).join(', ');
+  applyFilters();
+}}
+// Close multiselect when clicking outside
+document.addEventListener('click',e=>{{
+  if(!e.target.closest('#ms-league')){{
+    document.getElementById('ms-league').classList.remove('open');
+    document.getElementById('ms-league-trigger').classList.remove('open');
+  }}
+}});
+
 function isF(p){{if(!p)return false;const u=p.toUpperCase();return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,''));}}
 function isD(p){{return p&&/\\bD\\b/.test(p.toUpperCase());}}
 function vs(r){{return r.legacy_veteran?'legacy':r.new_veteran?'new':r.non_vet_ufa?'ufa':'none';}}
+
 function switchTab(tab){{
   curTab=tab;
   document.getElementById('tab-std').classList.toggle('active',tab==='std');
@@ -415,7 +507,7 @@ function switchTab(tab){{
 function applyFilters(){{
   const s=document.getElementById('search').value.trim().toLowerCase();
   const fv=document.getElementById('fv').value;
-  const fl=document.getElementById('fl').value;
+  const fcusd=document.getElementById('fcusd').value;
   const fp=document.getElementById('fp').value;
   const fa=document.getElementById('fa').value;
   filtered=D.filter(r=>{{
@@ -426,7 +518,9 @@ function applyFilters(){{
     if(fv==='any'&&v!=='legacy'&&v!=='new')return false;
     if(fv==='ufa'&&v!=='ufa')return false;
     if(fv==='none'&&v!=='none')return false;
-    if(fl&&r.league!==fl)return false;
+    if(selectedLeagues.size>0&&!selectedLeagues.has(r.league))return false;
+    if(fcusd==='any'&&r.call_up_send_down==='—')return false;
+    if(fcusd&&fcusd!=='any'&&!r.call_up_send_down.toLowerCase().includes(fcusd))return false;
     if(fp==='F'&&!isF(r.position))return false;
     if(fp==='D'&&!isD(r.position))return false;
     if(fa==='1'&&!r.active)return false;
@@ -467,6 +561,11 @@ function pmCell(pm){{
   const col=pm>0?'color:var(--green)':pm<0?'color:var(--red)':'color:var(--text-muted)';
   return`<span class="sn" style="${{col}}">${{pm>0?'+'+pm:pm}}</span>`;
 }}
+function cusdCell(v){{
+  if(!v||v==='—')return`<span style="color:var(--text-muted)">—</span>`;
+  const parts=v.split(' · ');
+  return parts.map(p=>`<span class="lg lg-${{p.toLowerCase()}}">${{p}}</span>`).join(' ');
+}}
 function render(){{
   const tb=document.getElementById('tb');
   const nr=document.getElementById('nr');
@@ -478,25 +577,29 @@ function render(){{
     const base=`<td class="player-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></td><td><span class="pos-badge">${{r.position||'—'}}</span></td><td>${{lgB(r.league)}}</td><td>${{gpB(r.total_gp)}}</td>`;
     const std=`<td class="sn">${{r.total_g}}</td><td class="sn">${{r.total_a}}</td><td class="sn sn-hi">${{r.total_tp}}</td><td class="sn ${{r.total_ppg>=0.75?'sn-ppg':''}}">${{r.total_ppg.toFixed(2)}}</td><td class="sn">${{r.total_pim}}</td><td>${{pmCell(r.total_pm)}}</td>`;
     const nhle=`<td class="sn sn-nhle">${{r.nhle_g.toFixed(1)}}</td><td class="sn sn-nhle">${{r.nhle_a.toFixed(1)}}</td><td class="sn sn-nhle" style="font-weight:600">${{r.nhle_tp.toFixed(1)}}</td><td class="sn ${{r.nhle_ppg>=0.40?'sn-ppg':''}}">${{r.nhle_ppg.toFixed(2)}}</td>`;
-    const tail=`<td>${{vetB(r)}}</td><td><span class="dot ${{r.active?'dot-on':'dot-off'}}"></span>${{r.active?'Active':'<span style="color:var(--text-muted)">Inactive</span>'}}</td>`;
+    const tail=`<td>${{cusdCell(r.call_up_send_down)}}</td><td>${{vetB(r)}}</td><td><span class="dot ${{r.active?'dot-on':'dot-off'}}"></span>${{r.active?'Active':'<span style="color:var(--text-muted)">Inactive</span>'}}</td>`;
     return`<tr>${{base}}${{isNhle?nhle:std}}${{tail}}</tr>`;
   }}).join('');
   tb.innerHTML=rows;
   if(filtered.length>shown){{
     const rem=filtered.length-shown;
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td colspan="${{isNhle?10:12}}" style="text-align:center;padding:16px"><button onclick="loadMore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:Barlow,sans-serif;font-size:13px;padding:8px 24px;border-radius:6px;cursor:pointer">Load ${{Math.min(rem,200)}} more (${{rem}} remaining)</button></td>`;
+    tr.innerHTML=`<td colspan="${{isNhle?11:13}}" style="text-align:center;padding:16px"><button onclick="loadMore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:Barlow,sans-serif;font-size:13px;padding:8px 24px;border-radius:6px;cursor:pointer">Load ${{Math.min(rem,200)}} more (${{rem}} remaining)</button></td>`;
     tb.appendChild(tr);
   }}
 }}
 function loadMore(){{shown+=200;render();}}
 function reset(){{
-  ['search','fv','fl','fp','fa'].forEach(id=>{{const e=document.getElementById(id);if(e.tagName==='INPUT')e.value='';else e.selectedIndex=0;}});
+  document.getElementById('search').value='';
+  ['fv','fcusd','fp','fa'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  selectedLeagues.clear();
+  document.querySelectorAll('#ms-league .ms-option').forEach(el=>{{el.classList.remove('selected');el.querySelector('input').checked=false;}});
+  document.getElementById('ms-league-trigger').textContent='All Leagues';
   document.getElementById('fv').value='any';
   applyFilters();
 }}
 ['search'].forEach(id=>document.getElementById(id).addEventListener('input',applyFilters));
-['fv','fl','fp','fa'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
+['fv','fcusd','fp','fa'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
 document.getElementById('fv').value='any';
 applyFilters();
 </script>
