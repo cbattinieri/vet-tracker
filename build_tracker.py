@@ -710,23 +710,27 @@ def main():
     hist_df = load_historical()
     print(f"  Total historical rows: {len(hist_df):,}\n")
 
-    # 2. Try scraper first — fall back to manual/ if it fails
+    # 2. Manual file takes priority if present — scraper is fallback
     current_stats = None
     data_source = "scraped"
 
-    print(f"Scraping {current_season} from EliteProspects...")
-    try:
-        current_stats = tdhepscrape.get_skaters(LEAGUES, current_season)
-        print(f"  Scraped {len(current_stats):,} rows\n")
-    except Exception as e:
-        print(f"  ⚠️  Scraper failed: {e}")
-        print(f"  Checking for manual fallback in '{MANUAL_DIR}/'...\n")
-        current_stats = load_manual()
-        if current_stats is not None:
-            data_source = "manual"
-            print()
-        else:
-            print(f"  ❌  No manual fallback found in '{MANUAL_DIR}/'.")
+    manual_stats = load_manual()
+    if manual_stats is not None:
+        print(f"  Manual file found — using manual data, skipping scraper.\n")
+        current_stats = manual_stats
+        data_source = "manual"
+    else:
+        print(f"Scraping {current_season} from EliteProspects...")
+        try:
+            current_stats = tdhepscrape.get_skaters(LEAGUES, current_season)
+            # Validate scrape — if all leagues returned 0 GP it's a silent failure
+            total_gp = pd.to_numeric(current_stats.get("gp", pd.Series()), errors="coerce").sum()
+            if total_gp == 0:
+                raise RuntimeError("Scraper returned data but all GP values are 0 — likely a silent failure.")
+            print(f"  Scraped {len(current_stats):,} rows\n")
+        except Exception as e:
+            print(f"  ⚠️  Scraper failed: {e}")
+            print(f"  No manual fallback found in '{MANUAL_DIR}/'.")
             print(f"  To use manual data:")
             print(f"    1. Run prepare_manual.py locally")
             print(f"    2. Upload manual/current_season.csv to GitHub")
