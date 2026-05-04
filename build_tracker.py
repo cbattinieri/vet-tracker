@@ -197,7 +197,7 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
     def fmt_cusd(lgs):
         if len(lgs) < 2:
             return "—"
-        return " · ".join(LEAGUE_LABELS.get(lg, lg.upper()) for lg in lgs)
+        return " ↕ ".join(LEAGUE_LABELS.get(lg, lg.upper()) for lg in lgs)
     vet_df["call_up_send_down"] = vet_df["link"].map(cusd_map).map(fmt_cusd).fillna("—")
 
     # Non-Vet UFA: 190–259 career GP, not already a veteran
@@ -342,7 +342,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </div>
   <div class="header-meta">
     <div class="header-season">{season} SEASON</div>
-    <div class="header-updated">Updated {updated}</div>
+    <div class="header-updated">{updated}</div>
   </div>
 </div>
 
@@ -367,14 +367,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </div>
   <div class="control-group">
     <label>Veteran Status</label>
-    <select id="fv">
-      <option value="">All Players</option>
-      <option value="legacy">⭐ Legacy Veterans</option>
-      <option value="new">🆕 New Veterans</option>
-      <option value="any">Any Veteran</option>
-      <option value="ufa">🟠 Non-Vet UFA (190–259 GP)</option>
-      <option value="none">Under Threshold (&lt;190 GP)</option>
-    </select>
+    <div class="ms-wrap" id="ms-vet">
+      <button class="ms-trigger" id="ms-vet-trigger" onclick="toggleMs('ms-vet')">Any Veteran</button>
+      <div class="ms-dropdown">
+        <div class="ms-option" onclick="toggleVet('legacy',this)"><input type="checkbox" value="legacy"> ⭐ Legacy Veterans</div>
+        <div class="ms-option" onclick="toggleVet('new',this)"><input type="checkbox" value="new"> 🆕 New Veterans</div>
+        <div class="ms-option" onclick="toggleVet('ufa',this)"><input type="checkbox" value="ufa"> 🟠 Non-Vet UFA (190–259 GP)</div>
+        <div class="ms-option" onclick="toggleVet('none',this)"><input type="checkbox" value="none"> Under Threshold (&lt;190 GP)</div>
+      </div>
+    </div>
   </div>
   <div class="control-group">
     <label>Current League</label>
@@ -396,20 +397,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </div>
   <div class="control-group">
     <label>Call-Up / Send-Down</label>
-    <select id="fcusd">
-      <option value="">All Players</option>
-      <option value="any">Any Movement</option>
-      <option value="nhl">Includes NHL</option>
-      <option value="ahl">Includes AHL</option>
-      <option value="echl">Includes ECHL</option>
-      <option value="khl">Includes KHL</option>
-      <option value="shl">Includes SHL</option>
-      <option value="liiga">Includes Liiga</option>
-      <option value="czechia">Includes Czechia</option>
-      <option value="slovakia">Includes Slovakia</option>
-      <option value="del">Includes DEL</option>
-      <option value="nl">Includes NL</option>
-    </select>
+    <div class="ms-wrap" id="ms-cusd">
+      <button class="ms-trigger" id="ms-cusd-trigger" onclick="toggleMs('ms-cusd')">All Players</button>
+      <div class="ms-dropdown">
+        <div class="ms-option" onclick="toggleCusd('any',this)"><input type="checkbox" value="any"> Any Movement</div>
+        <div class="ms-option" onclick="toggleCusd('NHL ↕ AHL',this)"><input type="checkbox" value="NHL ↕ AHL"> NHL ↕ AHL</div>
+        <div class="ms-option" onclick="toggleCusd('AHL ↕ ECHL',this)"><input type="checkbox" value="AHL ↕ ECHL"> AHL ↕ ECHL</div>
+        <div class="ms-option" onclick="toggleCusd('NHL ↕ ECHL',this)"><input type="checkbox" value="NHL ↕ ECHL"> NHL ↕ ECHL</div>
+        <div class="ms-option" onclick="toggleCusd('NHL ↕ AHL ↕ ECHL',this)"><input type="checkbox" value="NHL ↕ AHL ↕ ECHL"> NHL ↕ AHL ↕ ECHL</div>
+      </div>
+    </div>
   </div>
   <div class="control-group">
     <label>Position</label>
@@ -479,8 +476,26 @@ const NHLE_NOTE='NHLe normalizes scoring across leagues · career totals weighte
 const STD_NOTE='Career totals · GP, G, A, PTS, PPG, PIM, +/−';
 let sc='total_gp',sa=false,filtered=[],shown=200,curTab='std';
 let selectedLeagues=new Set();
+let selectedCusd=new Set();
+let selectedVet=new Set(['legacy','new']); // default: any veteran
 
-// --- Multiselect ---
+// --- Multiselect: Veteran Status ---
+function toggleVet(val,el){{
+  const cb=el.querySelector('input[type=checkbox]');
+  cb.checked=!cb.checked;
+  if(cb.checked){{selectedVet.add(val);el.classList.add('selected');}}
+  else{{selectedVet.delete(val);el.classList.remove('selected');}}
+  const trigger=document.getElementById('ms-vet-trigger');
+  if(selectedVet.size===0){{trigger.textContent='All Players';}}
+  else if(selectedVet.has('legacy')&&selectedVet.has('new')&&selectedVet.size===2){{trigger.textContent='Any Veteran';}}
+  else{{
+    const labels={{'legacy':'Legacy Vets','new':'New Vets','ufa':'Non-Vet UFA','none':'Under Threshold'}};
+    trigger.textContent=[...selectedVet].map(v=>labels[v]).join(', ');
+  }}
+  applyFilters();
+}}
+
+// --- Multiselect: Current League ---
 function toggleMs(id){{
   const wrap=document.getElementById(id);
   wrap.classList.toggle('open');
@@ -495,12 +510,28 @@ function toggleLeague(val,el){{
   trigger.textContent=selectedLeagues.size===0?'All Leagues':[...selectedLeagues].map(v=>LG[v]).join(', ');
   applyFilters();
 }}
-// Close multiselect when clicking outside
+
+// --- Multiselect: Call-Up / Send-Down ---
+function toggleCusd(val,el){{
+  const cb=el.querySelector('input[type=checkbox]');
+  cb.checked=!cb.checked;
+  if(cb.checked){{selectedCusd.add(val);el.classList.add('selected');}}
+  else{{selectedCusd.delete(val);el.classList.remove('selected');}}
+  const trigger=document.getElementById('ms-cusd-trigger');
+  if(selectedCusd.size===0){{trigger.textContent='All Players';}}
+  else if(selectedCusd.has('any')){{trigger.textContent='Any Movement';}}
+  else{{trigger.textContent=[...selectedCusd].join(', ');}}
+  applyFilters();
+}}
+
+// Close all multiselects when clicking outside
 document.addEventListener('click',e=>{{
-  if(!e.target.closest('#ms-league')){{
-    document.getElementById('ms-league').classList.remove('open');
-    document.getElementById('ms-league-trigger').classList.remove('open');
-  }}
+  ['ms-vet','ms-league','ms-cusd'].forEach(id=>{{
+    if(!e.target.closest(`#${{id}}`)){{
+      document.getElementById(id).classList.remove('open');
+      document.getElementById(id+'-trigger').classList.remove('open');
+    }}
+  }});
 }});
 
 function isF(p){{if(!p)return false;const u=p.toUpperCase();return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,''));}}
@@ -520,21 +551,20 @@ function switchTab(tab){{
 }}
 function applyFilters(){{
   const s=document.getElementById('search').value.trim().toLowerCase();
-  const fv=document.getElementById('fv').value;
-  const fcusd=document.getElementById('fcusd').value;
   const fp=document.getElementById('fp').value;
   const fa=document.getElementById('fa').value;
   filtered=D.filter(r=>{{
     if(s&&!r.player.toLowerCase().includes(s))return false;
     const v=vs(r);
-    if(fv==='legacy'&&v!=='legacy')return false;
-    if(fv==='new'&&v!=='new')return false;
-    if(fv==='any'&&v!=='legacy'&&v!=='new')return false;
-    if(fv==='ufa'&&v!=='ufa')return false;
-    if(fv==='none'&&v!=='none')return false;
+    if(selectedVet.size>0&&!selectedVet.has(v))return false;
     if(selectedLeagues.size>0&&!selectedLeagues.has(r.league))return false;
-    if(fcusd==='any'&&r.call_up_send_down==='—')return false;
-    if(fcusd&&fcusd!=='any'&&!r.call_up_send_down.toLowerCase().includes(fcusd))return false;
+    if(selectedCusd.size>0){{
+      if(selectedCusd.has('any')){{
+        if(r.call_up_send_down==='—')return false;
+      }} else {{
+        if(![...selectedCusd].includes(r.call_up_send_down))return false;
+      }}
+    }}
     if(fp==='F'&&!isF(r.position))return false;
     if(fp==='D'&&!isD(r.position))return false;
     if(fa==='1'&&!r.active)return false;
@@ -577,8 +607,8 @@ function pmCell(pm){{
 }}
 function cusdCell(v){{
   if(!v||v==='—')return`<span style="color:var(--text-muted)">—</span>`;
-  const parts=v.split(' · ');
-  return parts.map(p=>`<span class="lg lg-${{p.toLowerCase()}}">${{p}}</span>`).join(' ');
+  const parts=v.split(' ↕ ');
+  return parts.map(p=>`<span class="lg lg-${{p.toLowerCase()}}">${{p}}</span>`).join('<span style="color:var(--text-muted);margin:0 2px">↕</span>');
 }}
 function render(){{
   const tb=document.getElementById('tb');
@@ -605,16 +635,30 @@ function render(){{
 function loadMore(){{shown+=200;render();}}
 function reset(){{
   document.getElementById('search').value='';
-  ['fv','fcusd','fp','fa'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  ['fp','fa'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  selectedVet=new Set(['legacy','new']);
+  document.querySelectorAll('#ms-vet .ms-option').forEach(el=>{{
+    const v=el.querySelector('input').value;
+    const checked=v==='legacy'||v==='new';
+    el.querySelector('input').checked=checked;
+    el.classList.toggle('selected',checked);
+  }});
+  document.getElementById('ms-vet-trigger').textContent='Any Veteran';
   selectedLeagues.clear();
   document.querySelectorAll('#ms-league .ms-option').forEach(el=>{{el.classList.remove('selected');el.querySelector('input').checked=false;}});
   document.getElementById('ms-league-trigger').textContent='All Leagues';
-  document.getElementById('fv').value='any';
+  selectedCusd.clear();
+  document.querySelectorAll('#ms-cusd .ms-option').forEach(el=>{{el.classList.remove('selected');el.querySelector('input').checked=false;}});
+  document.getElementById('ms-cusd-trigger').textContent='All Players';
   applyFilters();
 }}
 ['search'].forEach(id=>document.getElementById(id).addEventListener('input',applyFilters));
-['fv','fcusd','fp','fa'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
-document.getElementById('fv').value='any';
+['fp','fa'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
+// Boot: default to any veteran (legacy + new checked)
+document.querySelectorAll('#ms-vet .ms-option').forEach(el=>{{
+  const v=el.querySelector('input').value;
+  if(v==='legacy'||v==='new'){{el.querySelector('input').checked=true;el.classList.add('selected');}}
+}});
 applyFilters();
 </script>
 </body>
@@ -633,7 +677,7 @@ def build_html(vet_df: pd.DataFrame, current_season: str, data_source: str = "sc
     total_count   = len(vet_df)
     updated       = date.today().strftime("%B %d, %Y")
     season_label  = current_season.replace("-", "–")
-    source_label  = "Manual data load" if data_source == "manual" else f"Updated {updated}"
+    source_label  = f"⚠️ Manual data load — {updated}" if data_source == "manual" else f"Updated {updated}"
 
     html = HTML_TEMPLATE.format(
         json_data  = json.dumps(records, separators=(",", ":")),
