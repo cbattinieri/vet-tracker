@@ -252,8 +252,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .header-text .brand {{ font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold); }}
   .info-btn {{ display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--text-muted);color:var(--text-muted);font-size:11px;font-weight:700;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s;font-family:'Barlow Condensed',sans-serif; }}
   .info-btn:hover {{ border-color:var(--gold);color:var(--gold); }}
-  .info-tooltip {{ display:none;position:absolute;top:26px;left:50%;transform:translateX(-50%);background:#1c2330;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--text-muted);white-space:nowrap;z-index:100;pointer-events:none; }}
-  .info-btn:hover .info-tooltip {{ display:block; }}
+  .info-panel {{ display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:24px;width:520px;max-width:90vw;max-height:80vh;overflow-y:auto;z-index:1000;box-shadow:0 20px 60px rgba(0,0,0,.7); }}
+  .info-panel.open {{ display:block; }}
+  .info-overlay {{ display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999; }}
+  .info-overlay.open {{ display:block; }}
+  .info-panel-title {{ font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center; }}
+  .info-close {{ background:transparent;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1;padding:0; }}
+  .info-close:hover {{ color:var(--text); }}
+  .info-section {{ margin-bottom:18px; }}
+  .info-section:last-child {{ margin-bottom:0; }}
+  .info-section-head {{ font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);padding-bottom:5px;margin-bottom:10px; }}
+  .info-row {{ display:flex;gap:12px;margin-bottom:8px;align-items:flex-start; }}
+  .info-row:last-child {{ margin-bottom:0; }}
+  .info-term {{ font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--gold);white-space:nowrap;min-width:120px;padding-top:1px; }}
+  .info-def {{ font-size:12px;color:var(--text-muted);line-height:1.5; }}
+  .info-note {{ background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:14px; }}
   .header-meta {{ margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px; }}
   .header-season {{ background:var(--surface2);border:1px solid var(--gold-dim);border-radius:6px;padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:1px; }}
   .header-updated {{ font-size:11px;color:var(--text-muted); }}
@@ -336,9 +349,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <div class="header-text">
     <div class="header-title-row">
       <h1>Pro Hockey Veteran Tracker</h1>
-      <div class="info-btn">i
-        <div class="info-tooltip">ECHL veteran status · 260 career GP threshold across NHL, AHL, ECHL, KHL, SHL, Liiga, Czechia, Slovakia, DEL &amp; NL</div>
-      </div>
+      <div class="info-btn" onclick="toggleInfo()">i</div>
     </div>
     <div class="brand">Batt Analytics</div>
   </div>
@@ -346,6 +357,40 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="header-season">{season} SEASON</div>
     <div class="header-updated">{updated}</div>
   </div>
+</div>
+
+<div class="info-overlay" id="info-overlay" onclick="toggleInfo()"></div>
+<div class="info-panel" id="info-panel">
+  <div class="info-panel-title">
+    Field Guide
+    <button class="info-close" onclick="toggleInfo()">✕</button>
+  </div>
+
+  <div class="info-section">
+    <div class="info-section-head">Veteran Status</div>
+    <div class="info-row"><div class="info-term">⭐ Veteran</div><div class="info-def">260+ career GP. Counts against the ECHL veteran roster limit.</div></div>
+    <div class="info-row"><div class="info-term">🆕 New Vet</div><div class="info-def">Crossed 260 GP this season. Was a non-veteran at season start.</div></div>
+    <div class="info-row"><div class="info-term">🟠 Non-Vet UFA</div><div class="info-def">190–259 GP. Not yet a veteran but UFA-eligible. Watch as a future vet risk.</div></div>
+    <div class="info-row"><div class="info-term">245/260</div><div class="info-def">Under threshold. The progress bar shows how close the player is to 260 GP.</div></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-section-head">Columns</div>
+    <div class="info-row"><div class="info-term">GP</div><div class="info-def">Career games played across all 10 tracked leagues. This number determines veteran status.</div></div>
+    <div class="info-row"><div class="info-term">G / A / PTS / PPG / PIM</div><div class="info-def">Career totals across all leagues. Raw and unadjusted for league strength.</div></div>
+    <div class="info-row"><div class="info-term">+/−</div><div class="info-def">Career plus/minus. Not available in all leagues.</div></div>
+    <div class="info-row"><div class="info-term">Current League</div><div class="info-def">The league the player most recently appeared in.</div></div>
+    <div class="info-row"><div class="info-term">Call-Up / Send-Down</div><div class="info-def">Leagues the player appeared in during their most recent season. Two or more (e.g. NHL ↕ AHL) means they moved between levels that year. — means single league only.</div></div>
+    <div class="info-row"><div class="info-term">Active</div><div class="info-def">🟢 played this season &nbsp;·&nbsp; ⚫ inactive (injured, unsigned, or retired)</div></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-section-head">NHLe Stats Tab</div>
+    <div class="info-row"><div class="info-term">What is NHLe?</div><div class="info-def">NHL Equivalency. Normalizes scoring across leagues — a 0.80 PPG player in the ECHL is not the same as 0.80 in the AHL. NHLe converts each season using a league strength factor before summing, so career totals are properly weighted.</div></div>
+    <div class="info-row"><div class="info-term">Factors</div><div class="info-def">NHL 1.00 · KHL 0.62 · AHL 0.44 · SHL 0.43 · Liiga 0.42 · NL 0.40 · DEL/Czechia 0.37 · Slovakia 0.28 · ECHL 0.27</div></div>
+  </div>
+
+  <div class="info-note">Data source: EliteProspects · Updated weekly every Monday · Regular season only</div>
 </div>
 
 <div class="stats-bar">
@@ -536,6 +581,10 @@ document.addEventListener('click',e=>{{
   }});
 }});
 
+function toggleInfo(){{
+  document.getElementById('info-panel').classList.toggle('open');
+  document.getElementById('info-overlay').classList.toggle('open');
+}}
 function isF(p){{if(!p)return false;const u=p.toUpperCase();return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,''));}}
 function isD(p){{return p&&/\\bD\\b/.test(p.toUpperCase());}}
 function vs(r){{return r.legacy_veteran?'legacy':r.new_veteran?'new':r.non_vet_ufa?'ufa':'none';}}
