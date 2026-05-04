@@ -26,6 +26,7 @@ import TopDownHockey_Scraper.TopDownHockey_EliteProspects_Scraper as tdhepscrape
 
 DATA_DIR  = Path("data")
 DOCS_DIR  = Path("docs")
+MANUAL_DIR = Path("manual")
 DOCS_DIR.mkdir(exist_ok=True)
 
 LEAGUES = ["nhl", "ahl", "echl", "khl", "shl", "liiga", "czechia", "slovakia", "del", "nl"]
@@ -103,6 +104,19 @@ def load_historical() -> pd.DataFrame:
         frames.append(df)
         print(f"  Loaded {len(df):,} rows from {fname}")
     return pd.concat(frames, ignore_index=True)
+
+
+def load_manual() -> pd.DataFrame | None:
+    """
+    Check manual/ folder for a preprocessed current_season.csv.
+    Returns the dataframe if found, None otherwise.
+    """
+    manual_file = MANUAL_DIR / "current_season.csv"
+    if manual_file.exists():
+        df = pd.read_csv(manual_file)
+        print(f"  ✅  Loaded manual fallback: {manual_file} ({len(df):,} rows)")
+        return df
+    return None
 
 
 def clean_numeric(df: pd.DataFrame) -> pd.DataFrame:
@@ -607,7 +621,7 @@ applyFilters();
 </html>"""
 
 
-def build_html(vet_df: pd.DataFrame, current_season: str) -> str:
+def build_html(vet_df: pd.DataFrame, current_season: str, data_source: str = "scraped") -> str:
     records = json.loads(
         vet_df.to_json(orient="records")
     )
@@ -619,11 +633,12 @@ def build_html(vet_df: pd.DataFrame, current_season: str) -> str:
     total_count   = len(vet_df)
     updated       = date.today().strftime("%B %d, %Y")
     season_label  = current_season.replace("-", "–")
+    source_label  = "Manual data load" if data_source == "manual" else f"Updated {updated}"
 
     html = HTML_TEMPLATE.format(
         json_data  = json.dumps(records, separators=(",", ":")),
         season     = season_label,
-        updated    = updated,
+        updated    = source_label,
         total      = f"{total_count:,}",
         legacy     = f"{legacy_count:,}",
         new_vets   = f"{new_count:,}",
@@ -649,10 +664,31 @@ def main():
     hist_df = load_historical()
     print(f"  Total historical rows: {len(hist_df):,}\n")
 
-    # 2. Scrape current season
+    # 2. Try scraper first — fall back to manual/ if it fails
+    current_stats = None
+    data_source = "scraped"
+
     print(f"Scraping {current_season} from EliteProspects...")
-    current_stats = tdhepscrape.get_skaters(LEAGUES, current_season)
-    print(f"  Scraped {len(current_stats):,} rows\n")
+    try:
+        current_stats = tdhepscrape.get_skaters(LEAGUES, current_season)
+        print(f"  Scraped {len(current_stats):,} rows\n")
+    except Exception as e:
+        print(f"  ⚠️  Scraper failed: {e}")
+        print(f"  Checking for manual fallback in '{MANUAL_DIR}/'...\n")
+        current_stats = load_manual()
+        if current_stats is not None:
+            data_source = "manual"
+            print()
+        else:
+            print(f"  ❌  No manual fallback found in '{MANUAL_DIR}/'.")
+            print(f"  To use manual data:")
+            print(f"    1. Run prepare_manual.py locally")
+            print(f"    2. Upload manual/current_season.csv to GitHub")
+            print(f"    3. Re-trigger this workflow")
+            raise RuntimeError(
+                "Scraper failed and no manual fallback available. "
+                "See above for instructions."
+            )
 
     # 3. Combine & clean
     print("Processing data...")
@@ -668,10 +704,11 @@ def main():
     print(f"  Legacy veterans:      {vet_df['legacy_veteran'].sum():,}")
     print(f"  New veterans:         {vet_df['new_veteran'].sum():,}")
     print(f"  Non-Vet UFAs:         {vet_df['non_vet_ufa'].sum():,}")
-    print(f"  Active this season:   {vet_df['active'].sum():,}\n")
+    print(f"  Active this season:   {vet_df['active'].sum():,}")
+    print(f"  Data source:          {data_source}\n")
 
     # 6. Write HTML to docs/index.html (served by GitHub Pages)
-    html = build_html(vet_df, current_season)
+    html = build_html(vet_df, current_season, data_source)
     out_path = DOCS_DIR / "index.html"
     out_path.write_text(html, encoding="utf-8")
     print(f"  ✅  Wrote {out_path}  ({out_path.stat().st_size / 1_048_576:.1f} MB)")
