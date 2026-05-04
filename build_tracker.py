@@ -155,18 +155,20 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
     df_sorted = df.sort_values("season", ascending=False)
 
     vet_df = df_sorted.groupby("link").agg(
-        total_gp        =("gp",             "sum"),
-        total_g         =("g",              "sum"),
-        total_a         =("a",              "sum"),
-        total_tp        =("tp",             "sum"),
-        total_pim       =("pim",            "sum"),
-        total_pm        =("+/-",            "sum"),
-        nhle_g          =("nhle_g",         "sum"),
-        nhle_a          =("nhle_a",         "sum"),
-        nhle_tp         =("nhle_tp",        "sum"),
-        legacy_veteran  =("legacy_veteran", "first"),
-        new_veteran     =("new_veteran",    "first"),
-        league          =("league",         "first"),
+        player          =("player",          "first"),
+        position        =("position",        "first"),
+        total_gp        =("gp",              "sum"),
+        total_g         =("g",               "sum"),
+        total_a         =("a",               "sum"),
+        total_tp        =("tp",              "sum"),
+        total_pim       =("pim",             "sum"),
+        total_pm        =("+/-",             "sum"),
+        nhle_g          =("nhle_g",          "sum"),
+        nhle_a          =("nhle_a",          "sum"),
+        nhle_tp         =("nhle_tp",         "sum"),
+        legacy_veteran  =("legacy_veteran",  "first"),
+        new_veteran     =("new_veteran",     "first"),
+        league          =("league",          "first"),
     ).reset_index()
 
     vet_df["total_ppg"] = (
