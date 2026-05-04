@@ -154,7 +154,7 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
 
     df_sorted = df.sort_values("season", ascending=False)
 
-    vet_df = df_sorted.groupby(["player", "position", "link"]).agg(
+    vet_df = df_sorted.groupby("link").agg(
         total_gp        =("gp",             "sum"),
         total_g         =("g",              "sum"),
         total_a         =("a",              "sum"),
