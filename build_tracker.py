@@ -774,13 +774,12 @@ function updateSidebar() {{
   const listEl = document.getElementById('scout-list');
   listEl.innerHTML = [...shortlist.values()].map(r => {{
     const vetLabel = r.legacy_veteran ? '⭐ Vet' : r.new_veteran ? '🆕 New Vet' : r.non_vet_ufa ? '🟠 UFA' : `${{r.total_gp}} GP`;
-    const safeLink = r.link.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
     return `<div class="shortlist-item">
       <div class="si-info">
         <div class="si-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></div>
         <div class="si-meta">${{r.position||'—'}} · ${{LG[r.league]||r.league.toUpperCase()}} · ${{vetLabel}} · ${{r.total_gp}} GP</div>
       </div>
-      <button class="si-remove" onclick="removeFromShortlist('${{safeLink}}')" title="Remove">✕</button>
+      <button class="si-remove" data-link="${{r.link}}" onclick="removeFromShortlist(this.dataset.link)" title="Remove">✕</button>
     </div>`;
   }}).join('');
 }}
@@ -868,11 +867,10 @@ function renderCompare() {{
   // Header
   let html = '<thead><tr><th class="clbl" style="border-top:none;border-left:none;background:var(--bg)"></th>';
   players.forEach(r => {{
-    const safeLink = r.link.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
     html += `<th class="cphdr">
       <div class="cp-nm"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></div>
       <div class="cp-badges">${{vetB(r)}} ${{lgB(r.league)}}</div>
-      <button class="cp-rm" onclick="removeFromShortlist('${{safeLink}}')">✕ Remove</button>
+      <button class="cp-rm" data-link="${{r.link}}" onclick="removeFromShortlist(this.dataset.link)">✕ Remove</button>
     </th>`;
   }});
   html += '</tr></thead><tbody>';
@@ -1074,7 +1072,7 @@ function render() {{
   nr.style.display='none';
   const rows=filtered.slice(0,shown).map(r=>{{
     const cbTd = isScout
-      ? `<td class="td-cb"><input type="checkbox" class="row-cb" data-link="${{r.link}}" ${{shortlist.has(r.link)?'checked':''}} onchange="toggleSelect('${{r.link.replace(/'/g,\\"\\\\'\\")}}'  ,event)"></td>`
+      ? `<td class="td-cb"><input type="checkbox" class="row-cb" data-link="${{r.link}}" ${{shortlist.has(r.link)?'checked':''}} onchange="toggleSelect(this.dataset.link,event)"></td>`
       : '';
     const selCls = isScout && shortlist.has(r.link) ? ' class="sel-row"' : '';
     const base=`<td class="player-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></td><td><span class="pos-badge">${{r.position||'—'}}</span></td><td>${{lgB(r.league)}}</td><td>${{gpB(r.total_gp)}}</td>`;
