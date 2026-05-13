@@ -9,6 +9,12 @@ What it does:
   2. Scrapes the current season from EliteProspects
   3. Computes veteran status (260-GP threshold across all tracked leagues)
   4. Writes docs/index.html — the self-contained web app served by GitHub Pages
+
+NEW (Scout + Compare modes):
+  - Browse mode: existing filter/sort experience (default)
+  - Scout mode: checkbox column + right sidebar shortlist + Excel export
+  - Compare mode: side-by-side stat grid for 2–5 selected players
+  - Excel export via SheetJS CDN (shortlist OR full filtered list, explicitly labeled)
 """
 
 import json
@@ -24,8 +30,8 @@ import TopDownHockey_Scraper.TopDownHockey_EliteProspects_Scraper as tdhepscrape
 # Config
 # ---------------------------------------------------------------------------
 
-DATA_DIR  = Path("data")
-DOCS_DIR  = Path("docs")
+DATA_DIR   = Path("data")
+DOCS_DIR   = Path("docs")
 MANUAL_DIR = Path("manual")
 DOCS_DIR.mkdir(exist_ok=True)
 
@@ -45,11 +51,8 @@ LEAGUE_CSV = {
 }
 
 VET_THRESHOLD = 260
-UFA_THRESHOLD = 190   # Non-Vet UFA: 190–259 career GP
+UFA_THRESHOLD = 190
 
-# NHLe conversion factors — applied per season-league row before career aggregation.
-# Source: Desjardins / Bacon / Vollman consensus estimates.
-# NHL = 1.0 by definition; ECHL is the baseline for this tracker.
 NHLE_FACTORS = {
     "nhl":      1.00,
     "khl":      0.62,
@@ -63,7 +66,6 @@ NHLE_FACTORS = {
     "echl":     0.27,
 }
 
-# League tier for sorting call-up/send-down display (lower = higher tier)
 LEAGUE_TIER = {
     "nhl": 1, "khl": 2, "ahl": 2,
     "shl": 3, "liiga": 3, "echl": 3,
@@ -81,10 +83,6 @@ LEAGUE_LABELS = {
 # ---------------------------------------------------------------------------
 
 def current_season_str() -> str:
-    """Return e.g. '2025-2026' based on today's date.
-    Hockey seasons start in September, so Oct–Aug belong to the season
-    that started the previous calendar year.
-    """
     today = date.today()
     if today.month >= 9:
         start = today.year
@@ -106,11 +104,7 @@ def load_historical() -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
-def load_manual() -> pd.DataFrame | None:
-    """
-    Check manual/ folder for a preprocessed current_season.csv.
-    Returns the dataframe if found, None otherwise.
-    """
+def load_manual() -> "pd.DataFrame | None":
     manual_file = MANUAL_DIR / "current_season.csv"
     if manual_file.exists():
         df = pd.read_csv(manual_file)
@@ -129,12 +123,8 @@ def clean_numeric(df: pd.DataFrame) -> pd.DataFrame:
 
 def compute_veterans(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
     not_current = df["season"] != current_season
-
-    # Legacy: already had 260+ GP before this season
     legacy_gp = df[not_current].groupby("link")["gp"].sum()
     df["legacy_veteran"] = df["link"].map(legacy_gp).fillna(0) >= VET_THRESHOLD
-
-    # New vet: crossed the threshold during this season
     pre_gp   = df[not_current].groupby("link")["gp"].sum()
     total_gp = df.groupby("link")["gp"].sum()
     df["new_veteran"] = df["link"].map(
@@ -144,8 +134,6 @@ def compute_veterans(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
 
 
 def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
-    # Apply NHLe factor per season-league row BEFORE aggregating —
-    # this gives a true career NHLe stat line weighted by league strength.
     df = df.copy()
     df["nhle_factor"] = df["league"].map(NHLE_FACTORS).fillna(0.27)
     df["nhle_g"]  = (df["g"]  * df["nhle_factor"])
@@ -174,8 +162,6 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
     vet_df["total_ppg"] = (
         vet_df["total_tp"] / vet_df["total_gp"].replace(0, 1)
     ).round(2)
-
-    # Round NHLe counting stats and compute NHLe PPG
     vet_df["nhle_g"]   = vet_df["nhle_g"].round(1)
     vet_df["nhle_a"]   = vet_df["nhle_a"].round(1)
     vet_df["nhle_tp"]  = vet_df["nhle_tp"].round(1)
@@ -183,13 +169,9 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
         vet_df["nhle_tp"] / vet_df["total_gp"].replace(0, 1)
     ).round(2)
 
-    # Active = played at least 1 GP in current season
     cur_gp = df[df["season"] == current_season].groupby("link")["gp"].sum()
     vet_df["active"] = vet_df["link"].map(cur_gp).fillna(0) > 0
 
-    # Call-Up / Send-Down: all leagues in each player's most recent season.
-    # Uses hybrid fallback — if not in current season, uses last season they appeared.
-    # Shows "—" for players who only played in one league that season.
     most_recent_season = df.groupby("link")["season"].max()
     df["_mrs"] = df["link"].map(most_recent_season)
     mrs_df = df[df["season"] == df["_mrs"]]
@@ -202,7 +184,6 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
         return " ↕ ".join(LEAGUE_LABELS.get(lg, lg.upper()) for lg in lgs)
     vet_df["call_up_send_down"] = vet_df["link"].map(cusd_map).map(fmt_cusd).fillna("—")
 
-    # Non-Vet UFA: 190–259 career GP, not already a veteran
     vet_df["non_vet_ufa"] = (
         (vet_df["total_gp"] >= UFA_THRESHOLD) &
         (vet_df["total_gp"] < VET_THRESHOLD) &
@@ -210,7 +191,6 @@ def build_summary(df: pd.DataFrame, current_season: str) -> pd.DataFrame:
         (~vet_df["new_veteran"])
     )
 
-    # Clean player name — strip trailing "(POS)" added by scraper
     vet_df["player"] = vet_df["player"].str.replace(r"\s*\([^)]+\)\s*$", "", regex=True).str.strip()
 
     cols = [
@@ -235,6 +215,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pro Hockey Veteran Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
   :root {{
@@ -244,6 +225,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }}
   body {{ font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }}
 
+  /* ---- HEADER ---- */
   .header {{ background: linear-gradient(135deg,#0d1117 0%,#1a2030 50%,#0d1117 100%); border-bottom: 2px solid var(--gold); padding: 20px 32px; display: flex; align-items: center; gap: 20px; }}
   .header-icon {{ width:48px;height:48px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0; }}
   .header-text {{ display:flex;flex-direction:column;gap:3px; }}
@@ -271,12 +253,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .header-season {{ background:var(--surface2);border:1px solid var(--gold-dim);border-radius:6px;padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:1px; }}
   .header-updated {{ font-size:11px;color:var(--text-muted); }}
 
-  .stats-bar {{ display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border); }}
+  /* ---- STATS BAR ---- */
+  .stats-bar {{ display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border); }}
   .stat-card {{ background:var(--surface);padding:16px 24px;text-align:center; }}
   .stat-card .num {{ font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;line-height:1; }}
   .stat-card .label {{ font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-top:4px; }}
   .num-gold {{ color:var(--gold); }} .num-green {{ color:var(--green); }} .num-blue {{ color:var(--blue); }} .num-white {{ color:var(--text); }}
 
+  /* ---- CONTROLS ---- */
   .controls {{ padding:16px 24px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end; }}
   .control-group {{ display:flex;flex-direction:column;gap:5px; }}
   .control-group label {{ font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600; }}
@@ -284,7 +268,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   input[type="text"] {{ min-width:260px; }}
   input[type="text"]:focus, select:focus {{ border-color:var(--gold); }}
   select {{ cursor:pointer;min-width:140px; }}
-  /* Custom multiselect */
   .ms-wrap {{ position:relative; }}
   .ms-trigger {{ background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:8px 28px 8px 12px;cursor:pointer;min-width:160px;text-align:left;transition:border-color .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;width:100%; }}
   .ms-trigger:focus,.ms-trigger.open {{ border-color:var(--gold); }}
@@ -300,9 +283,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .results-count {{ margin-left:auto;align-self:flex-end;font-size:13px;color:var(--text-muted);white-space:nowrap; }}
   .results-count span {{ color:var(--text);font-weight:600; }}
 
+  /* ---- THRESHOLD NOTE ---- */
   .threshold-note {{ font-size:11px;color:var(--text-muted);padding:7px 24px;background:var(--surface);border-bottom:1px solid var(--border); }}
   .threshold-note strong {{ color:var(--gold); }}
 
+  /* ---- TABLE ---- */
   .table-wrap {{ overflow-x:auto;padding-bottom:60px; }}
   table {{ width:100%;border-collapse:collapse;font-size:13px; }}
   thead {{ position:sticky;top:0;z-index:10;background:var(--surface2); }}
@@ -310,7 +295,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   th:hover {{ color:var(--gold); }} th.sorted {{ color:var(--gold); }} th .arr {{ margin-left:4px;opacity:.5; }} th.sorted .arr {{ opacity:1; }}
   td {{ padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap; }}
   tr:hover td {{ background:var(--surface2); }}
-
   .player-name a {{ color:var(--text);font-weight:600;text-decoration:none;transition:color .15s; }}
   .player-name a:hover {{ color:var(--gold);text-decoration:underline; }}
   .pos-badge {{ display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:11px;font-weight:600;font-family:'Barlow Condensed',sans-serif;color:var(--text-muted); }}
@@ -331,8 +315,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .fill-gold {{ background:var(--gold); }} .fill-grn {{ background:var(--green); }} .fill-mut {{ background:var(--text-muted); }}
   .sn {{ font-family:'Barlow Condensed',sans-serif;font-size:14px; }}
   .sn-hi {{ color:var(--text);font-weight:600; }} .sn-ppg {{ color:var(--gold); }} .sn-nhle {{ color:#7dd3fc; }}
-
-  /* Tab toggle */
   .tab-bar {{ display:flex;align-items:center;gap:0;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px; }}
   .tab-btn {{ font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:12px 20px;border:none;border-bottom:3px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s;margin-bottom:-1px; }}
   .tab-btn:hover {{ color:var(--text); }}
@@ -340,6 +322,81 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .tab-note {{ margin-left:auto;font-size:11px;color:var(--text-muted);padding:12px 0; }}
   .no-results {{ text-align:center;padding:60px 20px;color:var(--text-muted);font-size:16px; }}
   .no-results .ico {{ font-size:48px;margin-bottom:12px; }}
+
+  /* ---- MODE BAR ---- */
+  .mode-bar {{ display:flex;align-items:center;padding:10px 24px;background:var(--bg);border-bottom:1px solid var(--border);gap:16px; }}
+  .mode-pill {{ display:flex;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;flex-shrink:0; }}
+  .mode-btn {{ font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:8px 20px;border:none;border-right:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s; }}
+  .mode-btn:last-child {{ border-right:none; }}
+  .mode-btn:hover:not([disabled]) {{ color:var(--text);background:var(--surface2); }}
+  .mode-btn.active {{ background:var(--gold);color:#000;font-weight:800; }}
+  .mode-btn[disabled] {{ opacity:.35;cursor:not-allowed; }}
+  .mode-hint {{ font-size:12px;color:var(--text-muted);flex:1; }}
+  .mode-hint .mhl {{ color:var(--gold);font-weight:600; }}
+
+  /* ---- SCOUT SIDEBAR ---- */
+  .scout-sidebar {{ position:fixed;right:0;top:0;width:300px;height:100vh;background:var(--surface);border-left:2px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;z-index:500;box-shadow:-4px 0 24px rgba(0,0,0,.5); }}
+  .scout-sidebar.open {{ transform:translateX(0); }}
+  .scout-hdr {{ padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0; }}
+  .scout-hdr-title {{ font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text);flex:1; }}
+  .scout-badge {{ background:var(--gold);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;border-radius:10px;padding:1px 8px;min-width:22px;text-align:center; }}
+  .scout-clear-btn {{ background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text-muted);font-family:'Barlow',sans-serif;font-size:11px;padding:4px 8px;cursor:pointer;transition:all .15s;white-space:nowrap; }}
+  .scout-clear-btn:hover {{ border-color:var(--red);color:var(--red); }}
+  .scout-list {{ flex:1;overflow-y:auto;padding:8px; }}
+  .shortlist-item {{ display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;background:var(--surface2);transition:border-color .15s; }}
+  .shortlist-item:hover {{ border-color:var(--gold-dim); }}
+  .si-info {{ flex:1;min-width:0; }}
+  .si-name {{ font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }}
+  .si-name a {{ color:inherit;text-decoration:none; }}
+  .si-name a:hover {{ color:var(--gold); }}
+  .si-meta {{ font-size:11px;color:var(--text-muted);margin-top:3px;line-height:1.4; }}
+  .si-remove {{ background:transparent;border:none;color:var(--text-muted);font-size:15px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;margin-top:1px; }}
+  .si-remove:hover {{ color:var(--red); }}
+  .scout-empty {{ flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text-muted);font-size:13px;text-align:center;padding:28px;line-height:1.6; }}
+  .scout-empty .eico {{ font-size:36px;opacity:.4; }}
+  .scout-footer {{ border-top:1px solid var(--border);padding:14px;flex-shrink:0;display:flex;flex-direction:column;gap:8px; }}
+  .exp-row {{ display:flex;flex-direction:column;gap:4px; }}
+  .exp-btn {{ font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px;padding:9px 12px;border-radius:6px;border:1px solid transparent;cursor:pointer;text-align:left;transition:all .2s;width:100%;display:flex;align-items:center;gap:7px; }}
+  .exp-btn:disabled {{ opacity:.35;cursor:not-allowed; }}
+  .exp-primary {{ background:var(--gold);color:#000;border-color:var(--gold); }}
+  .exp-primary:hover:not(:disabled) {{ background:#f5c95a; }}
+  .exp-secondary {{ background:transparent;color:var(--text);border-color:var(--border); }}
+  .exp-secondary:hover:not(:disabled) {{ border-color:var(--gold);color:var(--gold); }}
+  .exp-compare {{ background:#001828;color:var(--blue);border-color:#1a4060; }}
+  .exp-compare:hover:not(:disabled) {{ background:#002038; }}
+  .exp-caption {{ font-size:10px;color:var(--text-muted);padding:0 2px;line-height:1.5; }}
+  .exp-divider {{ height:1px;background:var(--border);margin:4px 0; }}
+
+  /* ---- CHECKBOX COLUMN ---- */
+  .th-cb {{ width:36px;padding:10px 8px 10px 14px!important;cursor:default!important; }}
+  .th-cb:hover {{ color:var(--text-muted)!important; }}
+  .td-cb {{ padding:9px 8px 9px 14px!important; }}
+  .row-cb {{ width:15px;height:15px;accent-color:var(--gold);cursor:pointer; }}
+  tr.sel-row td {{ background:rgba(232,184,75,.07)!important; }}
+  tr.sel-row:hover td {{ background:rgba(232,184,75,.13)!important; }}
+
+  /* ---- COMPARE VIEW ---- */
+  .compare-view {{ padding-bottom:60px; }}
+  .compare-topbar {{ display:flex;align-items:center;gap:16px;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20; }}
+  .compare-back {{ background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;padding:7px 14px;cursor:pointer;transition:all .2s;letter-spacing:.3px;text-transform:uppercase; }}
+  .compare-back:hover {{ border-color:var(--gold);color:var(--gold); }}
+  .compare-title {{ font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text);flex:1; }}
+  .compare-exp-btn {{ background:var(--gold);color:#000;border:none;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;padding:8px 18px;cursor:pointer;letter-spacing:.3px;text-transform:uppercase;transition:background .2s; }}
+  .compare-exp-btn:hover {{ background:#f5c95a; }}
+  .compare-outer {{ overflow-x:auto;padding:24px; }}
+  .ctbl {{ border-collapse:collapse;font-size:13px; }}
+  .ctbl td,.ctbl th {{ padding:9px 18px;border:1px solid var(--border);white-space:nowrap;vertical-align:middle; }}
+  .ctbl .clbl {{ background:var(--surface2);color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;text-align:right;min-width:130px;position:sticky;left:0;z-index:5;border-left:none; }}
+  .ctbl .csect td {{ background:var(--bg);color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-left:none;border-right:none; }}
+  .ctbl .cphdr {{ background:var(--surface2);text-align:center;vertical-align:top;min-width:170px;max-width:220px;padding:14px 16px; }}
+  .cp-nm {{ font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px; }}
+  .cp-nm a {{ color:inherit;text-decoration:none; }}
+  .cp-nm a:hover {{ color:var(--gold);text-decoration:underline; }}
+  .cp-badges {{ display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:8px; }}
+  .cp-rm {{ background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text-muted);font-family:'Barlow',sans-serif;font-size:11px;padding:3px 8px;cursor:pointer;transition:all .15s; }}
+  .cp-rm:hover {{ border-color:var(--red);color:var(--red); }}
+  .cval {{ text-align:center;color:var(--text); }}
+  .cval.best {{ color:var(--gold);font-weight:700;background:rgba(232,184,75,.09); }}
 </style>
 </head>
 <body>
@@ -365,7 +422,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     Field Guide
     <button class="info-close" onclick="toggleInfo()">✕</button>
   </div>
-
   <div class="info-section">
     <div class="info-section-head">Veteran Status</div>
     <div class="info-row"><div class="info-term">⭐ Veteran</div><div class="info-def">260+ career GP. Counts against the ECHL veteran roster limit.</div></div>
@@ -373,7 +429,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="info-row"><div class="info-term">🟠 Non-Vet UFA</div><div class="info-def">190–259 GP. Not yet a veteran but UFA-eligible. Watch as a future vet risk.</div></div>
     <div class="info-row"><div class="info-term">245/260</div><div class="info-def">Under threshold. The progress bar shows how close the player is to 260 GP.</div></div>
   </div>
-
   <div class="info-section">
     <div class="info-section-head">Columns</div>
     <div class="info-row"><div class="info-term">GP</div><div class="info-def">Career games played across all 10 tracked leagues. This number determines veteran status.</div></div>
@@ -383,13 +438,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="info-row"><div class="info-term">Call-Up / Send-Down</div><div class="info-def">Leagues the player appeared in during their most recent season. Two or more (e.g. NHL ↕ AHL) means they moved between levels that year. — means single league only.</div></div>
     <div class="info-row"><div class="info-term">Active</div><div class="info-def">🟢 played this season &nbsp;·&nbsp; ⚫ inactive (injured, unsigned, or retired)</div></div>
   </div>
-
   <div class="info-section">
     <div class="info-section-head">NHLe Stats Tab</div>
     <div class="info-row"><div class="info-term">What is NHLe?</div><div class="info-def">NHL Equivalency. Normalizes scoring across leagues — a 0.80 PPG player in the ECHL is not the same as 0.80 in the AHL. NHLe converts each season using a league strength factor before summing, so career totals are properly weighted.</div></div>
     <div class="info-row"><div class="info-term">Factors</div><div class="info-def">NHL 1.00 · KHL 0.62 · AHL 0.44 · SHL 0.43 · Liiga 0.42 · NL 0.40 · DEL/Czechia 0.37 · Slovakia 0.28 · ECHL 0.27</div></div>
   </div>
-
+  <div class="info-section">
+    <div class="info-section-head">Scout + Compare Modes</div>
+    <div class="info-row"><div class="info-term">Scout Mode</div><div class="info-def">Check rows to build a shortlist. Export shortlist or full filtered list to .xlsx. Tab and filter selections carry over.</div></div>
+    <div class="info-row"><div class="info-term">Compare Mode</div><div class="info-def">Side-by-side stat grid for 2–5 selected players. Gold = best value in each row. Remove players individually to narrow the comparison.</div></div>
+    <div class="info-row"><div class="info-term">Export: Shortlist</div><div class="info-def">Exports only the players you checked — your deliberate selections.</div></div>
+    <div class="info-row"><div class="info-term">Export: Filtered List</div><div class="info-def">Exports all players currently matching your active filters, regardless of checkboxes. Useful for handing off a league or vet-status slice.</div></div>
+  </div>
   <div class="info-note">Data source: EliteProspects · Updated weekly every Monday · Regular season only</div>
 </div>
 
@@ -407,7 +467,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <strong style="color:var(--orange)">Non-Vet UFA</strong> = 190–259 career GP (UFA-eligible but not yet a veteran).
 </div>
 
-<div class="controls">
+<!-- MODE BAR -->
+<div class="mode-bar" id="mode-bar">
+  <div class="mode-pill">
+    <button class="mode-btn active" id="mbtn-browse" onclick="setMode('browse')">📋 Browse</button>
+    <button class="mode-btn" id="mbtn-scout" onclick="setMode('scout')">🎯 Scout</button>
+    <button class="mode-btn" id="mbtn-compare" onclick="setMode('compare')" disabled>⚔️ Compare</button>
+  </div>
+  <div class="mode-hint" id="mode-hint">Filter and explore the full database</div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls" id="controls-bar">
   <div class="control-group">
     <label>Search Player</label>
     <input type="text" id="search" placeholder="Player name…" autocomplete="off">
@@ -475,15 +546,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <div class="results-count">Showing <span id="rc">—</span> players</div>
 </div>
 
-<div class="tab-bar">
+<!-- TAB BAR -->
+<div class="tab-bar" id="tab-bar-section">
   <button class="tab-btn active" id="tab-std" onclick="switchTab('std')">📊 Standard Stats</button>
   <button class="tab-btn" id="tab-nhle" onclick="switchTab('nhle')">🏒 NHLe Stats</button>
   <span class="tab-note" id="tab-note">Career totals · GP, G, A, PTS, PPG, PIM, +/−</span>
 </div>
 
-<div class="table-wrap">
+<!-- MAIN TABLE -->
+<div class="table-wrap" id="table-wrap">
   <table>
     <thead id="thead-std"><tr>
+      <th class="th-cb" style="display:none"></th>
       <th onclick="sort('player')" data-c="player">Player <span class="arr">↕</span></th>
       <th onclick="sort('position')" data-c="position">Pos <span class="arr">↕</span></th>
       <th onclick="sort('league')" data-c="league">Current League <span class="arr">↕</span></th>
@@ -499,6 +573,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <th onclick="sort('active')" data-c="active">Active <span class="arr">↕</span></th>
     </tr></thead>
     <thead id="thead-nhle" style="display:none"><tr>
+      <th class="th-cb" style="display:none"></th>
       <th onclick="sort('player')" data-c="player">Player <span class="arr">↕</span></th>
       <th onclick="sort('position')" data-c="position">Pos <span class="arr">↕</span></th>
       <th onclick="sort('league')" data-c="league">Current League <span class="arr">↕</span></th>
@@ -516,18 +591,350 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <div id="nr" class="no-results" style="display:none"><div class="ico">🔍</div>No players match your filters.</div>
 </div>
 
+<!-- COMPARE VIEW (replaces table when active) -->
+<div class="compare-view" id="compare-view" style="display:none">
+  <div class="compare-topbar">
+    <button class="compare-back" onclick="setMode('scout')">← Back to Scout</button>
+    <div class="compare-title" id="compare-title">Player Comparison</div>
+    <button class="compare-exp-btn" onclick="exportXlsx('shortlist')">📥 Export .xlsx</button>
+  </div>
+  <div class="compare-outer">
+    <table class="ctbl" id="compare-tbl"></table>
+  </div>
+</div>
+
+<!-- SCOUT SIDEBAR -->
+<div class="scout-sidebar" id="scout-sidebar">
+  <div class="scout-hdr">
+    <div class="scout-hdr-title">Shortlist</div>
+    <div class="scout-badge" id="scout-badge">0</div>
+    <button class="scout-clear-btn" onclick="clearShortlist()">Clear all</button>
+  </div>
+  <div class="scout-list" id="scout-list"></div>
+  <div class="scout-empty" id="scout-empty">
+    <div class="eico">📋</div>
+    <div>Check rows in the table to add players to your shortlist</div>
+  </div>
+  <div class="scout-footer" id="scout-footer" style="display:none">
+    <div class="exp-row">
+      <button class="exp-btn exp-primary" onclick="exportXlsx('shortlist')" id="exp-sl-btn">
+        📥 Export Shortlist (<span id="exp-sl-count">0</span>)
+      </button>
+      <div class="exp-caption">Your selected players only — exactly what you checked</div>
+    </div>
+    <div class="exp-divider"></div>
+    <div class="exp-row">
+      <button class="exp-btn exp-secondary" onclick="exportXlsx('filtered')">
+        📊 Export Filtered List (<span id="exp-fl-count">0</span>)
+      </button>
+      <div class="exp-caption">All players matching current filters — not just your selections</div>
+    </div>
+    <div class="exp-divider"></div>
+    <div class="exp-row">
+      <button class="exp-btn exp-compare" id="compare-go-btn" onclick="setMode('compare')" disabled>
+        ⚔️ Compare Selected
+      </button>
+      <div class="exp-caption" id="compare-caption">Select 2–5 players to compare side-by-side</div>
+    </div>
+  </div>
+</div>
+
 <script>
 const D={json_data};
 const LG={{'nhl':'NHL','ahl':'AHL','echl':'ECHL','khl':'KHL','shl':'SHL','liiga':'Liiga','czechia':'Czechia','slovakia':'Slovakia','del':'DEL','nl':'NL'}};
 const NHLE_NOTE='NHLe normalizes scoring across leagues · career totals weighted by league strength (KHL=0.62, AHL=0.44, SHL=0.43, Liiga=0.42, NL=0.40, DEL/Czechia=0.37, Slovakia=0.28, ECHL=0.27)';
 const STD_NOTE='Career totals · GP, G, A, PTS, PPG, PIM, +/−';
-let sc='total_gp',sa=false,filtered=[],shown=200,curTab='std';
-let selectedLeagues=new Set();
-let selectedCusd=new Set();
-let selectedVet=new Set(['legacy','new']); // default: any veteran
 
-// --- Multiselect: Veteran Status ---
-function toggleVet(val,el){{
+// ---- Core state ----
+let sc='total_gp', sa=false, filtered=[], shown=200, curTab='std';
+let selectedLeagues=new Set(), selectedCusd=new Set();
+let selectedVet=new Set(['legacy','new']);
+
+// ---- Scout/Compare state ----
+let shortlist=new Map(); // link -> record
+let currentMode='browse';
+
+// ===========================================================
+// MODE MANAGEMENT
+// ===========================================================
+function setMode(mode) {{
+  if (mode==='compare' && shortlist.size < 2) return;
+  currentMode = mode;
+
+  // Mode pill buttons
+  ['browse','scout','compare'].forEach(m => {{
+    document.getElementById('mbtn-'+m).classList.toggle('active', m===mode);
+  }});
+
+  // Sidebar open for scout + compare
+  document.getElementById('scout-sidebar').classList.toggle('open', mode==='scout'||mode==='compare');
+
+  // Show/hide main sections vs compare view
+  const mainSections = ['controls-bar','tab-bar-section','table-wrap'];
+  mainSections.forEach(id => {{
+    document.getElementById(id).style.display = (mode==='compare') ? 'none' : '';
+  }});
+  document.getElementById('compare-view').style.display = (mode==='compare') ? 'block' : 'none';
+
+  // Checkbox column in thead
+  document.querySelectorAll('.th-cb').forEach(th => {{
+    th.style.display = (mode==='scout') ? '' : 'none';
+  }});
+
+  // Mode hint text
+  const hints = {{
+    'browse': 'Filter and explore the full database',
+    'scout':  `<span class="mhl">${{shortlist.size}}</span> player${{shortlist.size!==1?'s':''}} selected &nbsp;·&nbsp; check rows to build your shortlist`,
+    'compare': `Comparing <span class="mhl">${{shortlist.size}}</span> player${{shortlist.size!==1?'s':''}}`
+  }};
+  document.getElementById('mode-hint').innerHTML = hints[mode];
+
+  if (mode==='compare') {{
+    document.getElementById('compare-title').textContent = `Player Comparison (${{shortlist.size}})`;
+    renderCompare();
+  }} else {{
+    render();
+  }}
+  updateSidebar();
+}}
+
+// ===========================================================
+// SHORTLIST MANAGEMENT
+// ===========================================================
+function toggleSelect(link, e) {{
+  e.stopPropagation();
+  if (shortlist.has(link)) {{
+    shortlist.delete(link);
+  }} else {{
+    if (shortlist.size >= 5) {{
+      alert('Maximum 5 players can be compared. Remove one from your shortlist first.');
+      const cb = document.querySelector(`input.row-cb[data-link="${{link}}"]`);
+      if (cb) cb.checked = false;
+      return;
+    }}
+    const rec = D.find(r => r.link === link);
+    if (rec) shortlist.set(link, rec);
+  }}
+  // Sync row highlight and checkbox state
+  const cb = document.querySelector(`input.row-cb[data-link="${{link}}"]`);
+  if (cb) {{
+    cb.checked = shortlist.has(link);
+    const row = cb.closest('tr');
+    if (row) row.classList.toggle('sel-row', shortlist.has(link));
+  }}
+  updateSidebar();
+  updateCompareBtnState();
+  if (currentMode==='scout') {{
+    document.getElementById('mode-hint').innerHTML =
+      `<span class="mhl">${{shortlist.size}}</span> player${{shortlist.size!==1?'s':''}} selected &nbsp;·&nbsp; check rows to build your shortlist`;
+  }}
+}}
+
+function removeFromShortlist(link) {{
+  shortlist.delete(link);
+  // Uncheck checkbox if visible
+  const cb = document.querySelector(`input.row-cb[data-link="${{link}}"]`);
+  if (cb) {{ cb.checked=false; const row=cb.closest('tr'); if(row) row.classList.remove('sel-row'); }}
+  updateSidebar();
+  updateCompareBtnState();
+  if (currentMode==='compare') {{
+    if (shortlist.size < 2) {{ setMode('scout'); return; }}
+    renderCompare();
+    document.getElementById('compare-title').textContent = `Player Comparison (${{shortlist.size}})`;
+  }}
+  if (currentMode==='scout') {{
+    document.getElementById('mode-hint').innerHTML =
+      `<span class="mhl">${{shortlist.size}}</span> player${{shortlist.size!==1?'s':''}} selected &nbsp;·&nbsp; check rows to build your shortlist`;
+  }}
+}}
+
+function clearShortlist() {{
+  shortlist.clear();
+  document.querySelectorAll('input.row-cb').forEach(cb => {{
+    cb.checked=false;
+    const row=cb.closest('tr'); if(row) row.classList.remove('sel-row');
+  }});
+  updateSidebar();
+  updateCompareBtnState();
+  if (currentMode==='compare') setMode('scout');
+  if (currentMode==='scout') {{
+    document.getElementById('mode-hint').innerHTML =
+      `<span class="mhl">0</span> players selected &nbsp;·&nbsp; check rows to build your shortlist`;
+  }}
+}}
+
+function updateSidebar() {{
+  const count = shortlist.size;
+  document.getElementById('scout-badge').textContent = count;
+  document.getElementById('exp-sl-count').textContent = count;
+  document.getElementById('exp-fl-count').textContent = filtered.length.toLocaleString();
+  const isEmpty = count === 0;
+  document.getElementById('scout-empty').style.display = isEmpty ? 'flex' : 'none';
+  document.getElementById('scout-footer').style.display = isEmpty ? 'none' : '';
+  const listEl = document.getElementById('scout-list');
+  listEl.innerHTML = [...shortlist.values()].map(r => {{
+    const vetLabel = r.legacy_veteran ? '⭐ Vet' : r.new_veteran ? '🆕 New Vet' : r.non_vet_ufa ? '🟠 UFA' : `${{r.total_gp}} GP`;
+    const safeLink = r.link.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div class="shortlist-item">
+      <div class="si-info">
+        <div class="si-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></div>
+        <div class="si-meta">${{r.position||'—'}} · ${{LG[r.league]||r.league.toUpperCase()}} · ${{vetLabel}} · ${{r.total_gp}} GP</div>
+      </div>
+      <button class="si-remove" onclick="removeFromShortlist('${{safeLink}}')" title="Remove">✕</button>
+    </div>`;
+  }}).join('');
+}}
+
+function updateCompareBtnState() {{
+  const n = shortlist.size;
+  const ok = n>=2 && n<=5;
+  document.getElementById('compare-go-btn').disabled = !ok;
+  document.getElementById('mbtn-compare').disabled = !ok;
+  const cap = document.getElementById('compare-caption');
+  if (n===0) cap.textContent='Select 2–5 players to compare side-by-side';
+  else if (n===1) cap.textContent='Select 1 more player to enable comparison';
+  else if (n>5) cap.textContent='Maximum 5 players — remove one to compare';
+  else cap.textContent=`Ready — click to compare ${{n}} players side-by-side`;
+}}
+
+// ===========================================================
+// EXCEL EXPORT
+// ===========================================================
+function exportXlsx(type) {{
+  if (typeof XLSX === 'undefined') {{ alert('Export library not loaded. Check your internet connection.'); return; }}
+  const source = type==='shortlist' ? [...shortlist.values()] : filtered;
+  if (!source.length) {{ alert('No players to export.'); return; }}
+
+  const headers = [
+    'Player','Position','Current League','GP',
+    'G','A','PTS','PPG','PIM','+/-',
+    'NHLe G','NHLe A','NHLe PTS','NHLe PPG',
+    'Veteran Status','Active','Call-Up / Send-Down','EliteProspects Link'
+  ];
+  const rows = source.map(r => [
+    r.player,
+    r.position||'',
+    LG[r.league]||r.league.toUpperCase(),
+    r.total_gp,
+    r.total_g, r.total_a, r.total_tp, r.total_ppg,
+    r.total_pim, r.total_pm,
+    r.nhle_g, r.nhle_a, r.nhle_tp, r.nhle_ppg,
+    r.legacy_veteran ? 'Legacy Veteran' :
+      r.new_veteran  ? 'New Veteran' :
+      r.non_vet_ufa  ? 'Non-Vet UFA (190-259 GP)' :
+      `Under Threshold (${{r.total_gp}} GP)`,
+    r.active ? 'Active' : 'Inactive',
+    r.call_up_send_down||'—',
+    r.link
+  ]);
+
+  const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  ws['!cols'] = [
+    {{wch:28}},{{wch:12}},{{wch:14}},{{wch:6}},
+    {{wch:6}},{{wch:6}},{{wch:7}},{{wch:7}},{{wch:7}},{{wch:6}},
+    {{wch:9}},{{wch:9}},{{wch:10}},{{wch:10}},
+    {{wch:28}},{{wch:10}},{{wch:22}},{{wch:50}}
+  ];
+  const wb = XLSX.utils.book_new();
+  const sheetName = type==='shortlist' ? 'Shortlist' : 'Filtered Players';
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  const today = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `vet_tracker_${{type==='shortlist'?'shortlist':'filtered'}}_${{today}}.xlsx`);
+}}
+
+// ===========================================================
+// COMPARE VIEW RENDERER
+// ===========================================================
+function renderCompare() {{
+  const players = [...shortlist.values()];
+  const n = players.length;
+  const tbl = document.getElementById('compare-tbl');
+  const colSpan = n + 1;
+
+  function bestIdx(vals, higherIsBetter=true) {{
+    const nums = vals.map(v => parseFloat(v));
+    if (nums.some(isNaN)) return -1;
+    const target = higherIsBetter ? Math.max(...nums) : Math.min(...nums);
+    const idx = nums.indexOf(target);
+    // Don't highlight if all values are equal
+    return nums.every(v => v===nums[0]) ? -1 : idx;
+  }}
+
+  function cval(val, isBest, extraCls='') {{
+    const cls=['cval', extraCls, isBest?'best':''].filter(Boolean).join(' ');
+    return `<td class="${{cls}}">${{val}}</td>`;
+  }}
+
+  // Header
+  let html = '<thead><tr><th class="clbl" style="border-top:none;border-left:none;background:var(--bg)"></th>';
+  players.forEach(r => {{
+    const safeLink = r.link.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    html += `<th class="cphdr">
+      <div class="cp-nm"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></div>
+      <div class="cp-badges">${{vetB(r)}} ${{lgB(r.league)}}</div>
+      <button class="cp-rm" onclick="removeFromShortlist('${{safeLink}}')">✕ Remove</button>
+    </th>`;
+  }});
+  html += '</tr></thead><tbody>';
+
+  function sectRow(label) {{
+    return `<tr class="csect"><td colspan="${{colSpan}}">${{label}}</td></tr>`;
+  }}
+  function statRow(label, vals, bi, extraCls='') {{
+    let row=`<tr><td class="clbl">${{label}}</td>`;
+    vals.forEach((v,i) => {{ row+=cval(v, i===bi, extraCls); }});
+    return row+'</tr>';
+  }}
+
+  // IDENTITY
+  html += sectRow('IDENTITY');
+  html += `<tr><td class="clbl">Position</td>${{players.map(r=>`<td class="cval"><span class="pos-badge">${{r.position||'—'}}</span></td>`).join('')}}</tr>`;
+  html += `<tr><td class="clbl">Active</td>${{players.map(r=>`<td class="cval"><span class="dot ${{r.active?'dot-on':'dot-off'}}"></span>${{r.active?'Active':'<span style="color:var(--text-muted)">Inactive</span>'}}</td>`).join('')}}</tr>`;
+  html += `<tr><td class="clbl">Call-Up / Send-Down</td>${{players.map(r=>`<td class="cval" style="font-size:12px">${{cusdCell(r.call_up_send_down)}}</td>`).join('')}}</tr>`;
+
+  // STANDARD STATS
+  html += sectRow('STANDARD STATS');
+  // GP — no highlight (it's a rules metric, not performance)
+  html += `<tr><td class="clbl">GP</td>${{players.map(r=>`<td class="cval">${{gpB(r.total_gp)}}</td>`).join('')}}</tr>`;
+  // G, A, PTS
+  [['total_g','G'],['total_a','A'],['total_tp','PTS']].forEach(([col,lbl]) => {{
+    const vals=players.map(r=>r[col]);
+    html += statRow(lbl, vals, bestIdx(vals), 'sn');
+  }});
+  // PPG
+  const ppgVals=players.map(r=>r.total_ppg.toFixed(2));
+  const ppgBi=bestIdx(ppgVals);
+  html += `<tr><td class="clbl">PPG</td>${{ppgVals.map((v,i)=>`<td class="cval sn ${{i===ppgBi?'best':''}} ${{parseFloat(v)>=0.75?'sn-ppg':''}}">${{v}}</td>`).join('')}}</tr>`;
+  // PIM — no highlight (contextual)
+  html += `<tr><td class="clbl">PIM</td>${{players.map(r=>`<td class="cval sn">${{r.total_pim}}</td>`).join('')}}</tr>`;
+  // +/-
+  const pmVals=players.map(r=>r.total_pm);
+  const pmBi=bestIdx(pmVals);
+  html += `<tr><td class="clbl">+/−</td>${{pmVals.map((v,i)=>`<td class="cval ${{i===pmBi?'best':''}}">${{pmCell(v)}}</td>`).join('')}}</tr>`;
+
+  // NHLe STATS
+  html += sectRow('NHLe STATS');
+  [['nhle_g','NHLe G'],['nhle_a','NHLe A'],['nhle_tp','NHLe PTS']].forEach(([col,lbl]) => {{
+    const vals=players.map(r=>r[col].toFixed(1));
+    const bi=bestIdx(vals);
+    html += `<tr><td class="clbl">${{lbl}}</td>${{vals.map((v,i)=>`<td class="cval sn sn-nhle ${{i===bi?'best':''}}">${{v}}</td>`).join('')}}</tr>`;
+  }});
+  const nhlePpgVals=players.map(r=>r.nhle_ppg.toFixed(2));
+  const nhlePpgBi=bestIdx(nhlePpgVals);
+  html += `<tr><td class="clbl">NHLe PPG</td>${{nhlePpgVals.map((v,i)=>`<td class="cval sn ${{i===nhlePpgBi?'best':''}} ${{parseFloat(v)>=0.40?'sn-ppg':''}}">${{v}}</td>`).join('')}}</tr>`;
+
+  // STATUS
+  html += sectRow('STATUS');
+  html += `<tr><td class="clbl">Veteran Status</td>${{players.map(r=>`<td class="cval">${{vetB(r)}}</td>`).join('')}}</tr>`;
+
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}}
+
+// ===========================================================
+// EXISTING FILTER / SORT / RENDER LOGIC (unchanged except render)
+// ===========================================================
+function toggleVet(val,el) {{
   const cb=el.querySelector('input[type=checkbox]');
   cb.checked=!cb.checked;
   if(cb.checked){{selectedVet.add(val);el.classList.add('selected');}}
@@ -541,14 +948,12 @@ function toggleVet(val,el){{
   }}
   applyFilters();
 }}
-
-// --- Multiselect: Current League ---
-function toggleMs(id){{
+function toggleMs(id) {{
   const wrap=document.getElementById(id);
   wrap.classList.toggle('open');
   document.getElementById(id+'-trigger').classList.toggle('open',wrap.classList.contains('open'));
 }}
-function toggleLeague(val,el){{
+function toggleLeague(val,el) {{
   const cb=el.querySelector('input[type=checkbox]');
   cb.checked=!cb.checked;
   if(cb.checked){{selectedLeagues.add(val);el.classList.add('selected');}}
@@ -557,9 +962,7 @@ function toggleLeague(val,el){{
   trigger.textContent=selectedLeagues.size===0?'All Leagues':[...selectedLeagues].map(v=>LG[v]).join(', ');
   applyFilters();
 }}
-
-// --- Multiselect: Call-Up / Send-Down ---
-function toggleCusd(val,el){{
+function toggleCusd(val,el) {{
   const cb=el.querySelector('input[type=checkbox]');
   cb.checked=!cb.checked;
   if(cb.checked){{selectedCusd.add(val);el.classList.add('selected');}}
@@ -570,8 +973,6 @@ function toggleCusd(val,el){{
   else{{trigger.textContent=[...selectedCusd].join(', ');}}
   applyFilters();
 }}
-
-// Close all multiselects when clicking outside
 document.addEventListener('click',e=>{{
   ['ms-vet','ms-league','ms-cusd'].forEach(id=>{{
     if(!e.target.closest(`#${{id}}`)){{
@@ -580,111 +981,118 @@ document.addEventListener('click',e=>{{
     }}
   }});
 }});
-
-function toggleInfo(){{
+function toggleInfo() {{
   document.getElementById('info-panel').classList.toggle('open');
   document.getElementById('info-overlay').classList.toggle('open');
 }}
-function isF(p){{if(!p)return false;const u=p.toUpperCase();return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,''));}}
-function isD(p){{return p&&/\\bD\\b/.test(p.toUpperCase());}}
-function vs(r){{return r.legacy_veteran?'legacy':r.new_veteran?'new':r.non_vet_ufa?'ufa':'none';}}
-
-function switchTab(tab){{
+function isF(p) {{ if(!p) return false; const u=p.toUpperCase(); return /\\b(F|C|LW|RW|W)\\b/.test(u)&&!/\\bD\\b/.test(u.replace(/D\\/F/,'')); }}
+function isD(p) {{ return p&&/\\bD\\b/.test(p.toUpperCase()); }}
+function vs(r) {{ return r.legacy_veteran?'legacy':r.new_veteran?'new':r.non_vet_ufa?'ufa':'none'; }}
+function switchTab(tab) {{
   curTab=tab;
   document.getElementById('tab-std').classList.toggle('active',tab==='std');
   document.getElementById('tab-nhle').classList.toggle('active',tab==='nhle');
   document.getElementById('thead-std').style.display=tab==='std'?'':'none';
   document.getElementById('thead-nhle').style.display=tab==='nhle'?'':'none';
   document.getElementById('tab-note').textContent=tab==='nhle'?NHLE_NOTE:STD_NOTE;
-  if(tab==='nhle'&&sc==='total_tp')sc='nhle_tp';
-  if(tab==='std'&&sc==='nhle_tp')sc='total_tp';
-  sortArr();render();
+  if(tab==='nhle'&&sc==='total_tp') sc='nhle_tp';
+  if(tab==='std'&&sc==='nhle_tp') sc='total_tp';
+  // Keep checkbox th visible in scout mode
+  if(currentMode==='scout') document.querySelectorAll('.th-cb').forEach(th=>th.style.display='');
+  sortArr(); render();
 }}
-function applyFilters(){{
+function applyFilters() {{
   const s=document.getElementById('search').value.trim().toLowerCase();
   const fp=document.getElementById('fp').value;
   const fa=document.getElementById('fa').value;
   filtered=D.filter(r=>{{
-    if(s&&!r.player.toLowerCase().includes(s))return false;
+    if(s&&!r.player.toLowerCase().includes(s)) return false;
     const v=vs(r);
-    if(selectedVet.size>0&&!selectedVet.has(v))return false;
-    if(selectedLeagues.size>0&&!selectedLeagues.has(r.league))return false;
-    if(selectedCusd.size>0){{
-      if(selectedCusd.has('any')){{
-        if(r.call_up_send_down==='—')return false;
-      }} else {{
-        if(![...selectedCusd].includes(r.call_up_send_down))return false;
-      }}
+    if(selectedVet.size>0&&!selectedVet.has(v)) return false;
+    if(selectedLeagues.size>0&&!selectedLeagues.has(r.league)) return false;
+    if(selectedCusd.size>0) {{
+      if(selectedCusd.has('any')) {{ if(r.call_up_send_down==='—') return false; }}
+      else {{ if(![...selectedCusd].includes(r.call_up_send_down)) return false; }}
     }}
-    if(fp==='F'&&!isF(r.position))return false;
-    if(fp==='D'&&!isD(r.position))return false;
-    if(fa==='1'&&!r.active)return false;
-    if(fa==='0'&&r.active)return false;
+    if(fp==='F'&&!isF(r.position)) return false;
+    if(fp==='D'&&!isD(r.position)) return false;
+    if(fa==='1'&&!r.active) return false;
+    if(fa==='0'&&r.active) return false;
     return true;
   }});
-  sortArr();shown=200;render();
+  sortArr(); shown=200; render();
+  // Keep filtered count in sidebar current
+  document.getElementById('exp-fl-count').textContent = filtered.length.toLocaleString();
 }}
-function sortArr(){{
+function sortArr() {{
   filtered.sort((a,b)=>{{
     let av=a[sc],bv=b[sc];
-    if(typeof av==='string')av=av.toLowerCase();
-    if(typeof bv==='string')bv=bv.toLowerCase();
-    if(av===bv)return 0;
+    if(typeof av==='string') av=av.toLowerCase();
+    if(typeof bv==='string') bv=bv.toLowerCase();
+    if(av===bv) return 0;
     return(sa?1:-1)*(av<bv?-1:1);
   }});
 }}
-function sort(col){{
-  if(sc===col)sa=!sa;else{{sc=col;sa=false;}}
+function sort(col) {{
+  if(sc===col) sa=!sa; else {{sc=col;sa=false;}}
   document.querySelectorAll('th').forEach(t=>{{t.classList.remove('sorted');const a=t.querySelector('.arr');if(a)a.textContent='↕';}});
   document.querySelectorAll(`th[data-c="${{col}}"]`).forEach(th=>{{th.classList.add('sorted');th.querySelector('.arr').textContent=sa?'↑':'↓';}});
-  sortArr();render();
+  sortArr(); render();
 }}
-function lgB(lg){{return `<span class="lg lg-${{lg}}">${{LG[lg]||lg.toUpperCase()}}</span>`;}}
-function vetB(r){{
+function lgB(lg) {{ return `<span class="lg lg-${{lg}}">${{LG[lg]||lg.toUpperCase()}}</span>`; }}
+function vetB(r) {{
   const v=vs(r);
-  if(v==='legacy')return'<span class="vb vb-legacy">⭐ Veteran</span>';
-  if(v==='new')return'<span class="vb vb-new">🆕 New Vet</span>';
-  if(v==='ufa')return'<span class="vb vb-ufa">🟠 Non-Vet UFA</span>';
-  return`<span class="vb vb-none">${{r.total_gp}}/260</span>`;
+  if(v==='legacy') return '<span class="vb vb-legacy">⭐ Veteran</span>';
+  if(v==='new')    return '<span class="vb vb-new">🆕 New Vet</span>';
+  if(v==='ufa')    return '<span class="vb vb-ufa">🟠 Non-Vet UFA</span>';
+  return `<span class="vb vb-none">${{r.total_gp}}/260</span>`;
 }}
-function gpB(gp){{
+function gpB(gp) {{
   const p=Math.min(100,Math.round(gp/260*100));
   const c=gp>=260?'fill-gold':gp>=200?'fill-grn':'fill-mut';
-  return`<div class="gp-wrap"><span class="sn sn-hi">${{gp}}</span><div class="gp-bg"><div class="gp-fill ${{c}}" style="width:${{p}}%"></div></div></div>`;
+  return `<div class="gp-wrap"><span class="sn sn-hi">${{gp}}</span><div class="gp-bg"><div class="gp-fill ${{c}}" style="width:${{p}}%"></div></div></div>`;
 }}
-function pmCell(pm){{
+function pmCell(pm) {{
   const col=pm>0?'color:var(--green)':pm<0?'color:var(--red)':'color:var(--text-muted)';
-  return`<span class="sn" style="${{col}}">${{pm>0?'+'+pm:pm}}</span>`;
+  return `<span class="sn" style="${{col}}">${{pm>0?'+'+pm:pm}}</span>`;
 }}
-function cusdCell(v){{
-  if(!v||v==='—')return`<span style="color:var(--text-muted)">—</span>`;
+function cusdCell(v) {{
+  if(!v||v==='—') return `<span style="color:var(--text-muted)">—</span>`;
   const parts=v.split(' ↕ ');
   return parts.map(p=>`<span class="lg lg-${{p.toLowerCase()}}">${{p}}</span>`).join('<span style="color:var(--text-muted);margin:0 2px">↕</span>');
 }}
-function render(){{
+function render() {{
+  if (currentMode==='compare') return; // compare has its own renderer
   const tb=document.getElementById('tb');
   const nr=document.getElementById('nr');
   const isNhle=curTab==='nhle';
+  const isScout=currentMode==='scout';
+  // std=13 cols, nhle=11 cols; +1 for checkbox in scout
+  const totalCols = (isNhle?11:13) + (isScout?1:0);
   document.getElementById('rc').textContent=filtered.length.toLocaleString();
-  if(!filtered.length){{tb.innerHTML='';nr.style.display='block';return;}}
+  if(!filtered.length) {{tb.innerHTML='';nr.style.display='block';return;}}
   nr.style.display='none';
   const rows=filtered.slice(0,shown).map(r=>{{
+    const cbTd = isScout
+      ? `<td class="td-cb"><input type="checkbox" class="row-cb" data-link="${{r.link}}" ${{shortlist.has(r.link)?'checked':''}} onchange="toggleSelect('${{r.link.replace(/'/g,\\"\\\\'\\")}}'  ,event)"></td>`
+      : '';
+    const selCls = isScout && shortlist.has(r.link) ? ' class="sel-row"' : '';
     const base=`<td class="player-name"><a href="${{r.link}}" target="_blank" rel="noopener">${{r.player}}</a></td><td><span class="pos-badge">${{r.position||'—'}}</span></td><td>${{lgB(r.league)}}</td><td>${{gpB(r.total_gp)}}</td>`;
     const std=`<td class="sn">${{r.total_g}}</td><td class="sn">${{r.total_a}}</td><td class="sn sn-hi">${{r.total_tp}}</td><td class="sn ${{r.total_ppg>=0.75?'sn-ppg':''}}">${{r.total_ppg.toFixed(2)}}</td><td class="sn">${{r.total_pim}}</td><td>${{pmCell(r.total_pm)}}</td>`;
     const nhle=`<td class="sn sn-nhle">${{r.nhle_g.toFixed(1)}}</td><td class="sn sn-nhle">${{r.nhle_a.toFixed(1)}}</td><td class="sn sn-nhle" style="font-weight:600">${{r.nhle_tp.toFixed(1)}}</td><td class="sn ${{r.nhle_ppg>=0.40?'sn-ppg':''}}">${{r.nhle_ppg.toFixed(2)}}</td>`;
     const tail=`<td>${{cusdCell(r.call_up_send_down)}}</td><td>${{vetB(r)}}</td><td><span class="dot ${{r.active?'dot-on':'dot-off'}}"></span>${{r.active?'Active':'<span style="color:var(--text-muted)">Inactive</span>'}}</td>`;
-    return`<tr>${{base}}${{isNhle?nhle:std}}${{tail}}</tr>`;
+    return `<tr${{selCls}}>${{cbTd}}${{base}}${{isNhle?nhle:std}}${{tail}}</tr>`;
   }}).join('');
   tb.innerHTML=rows;
-  if(filtered.length>shown){{
+  if(filtered.length>shown) {{
     const rem=filtered.length-shown;
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td colspan="${{isNhle?11:13}}" style="text-align:center;padding:16px"><button onclick="loadMore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:Barlow,sans-serif;font-size:13px;padding:8px 24px;border-radius:6px;cursor:pointer">Load ${{Math.min(rem,200)}} more (${{rem}} remaining)</button></td>`;
+    tr.innerHTML=`<td colspan="${{totalCols}}" style="text-align:center;padding:16px"><button onclick="loadMore()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:Barlow,sans-serif;font-size:13px;padding:8px 24px;border-radius:6px;cursor:pointer">Load ${{Math.min(rem,200)}} more (${{rem}} remaining)</button></td>`;
     tb.appendChild(tr);
   }}
 }}
-function loadMore(){{shown+=200;render();}}
-function reset(){{
+function loadMore() {{ shown+=200; render(); }}
+function reset() {{
   document.getElementById('search').value='';
   ['fp','fa'].forEach(id=>document.getElementById(id).selectedIndex=0);
   selectedVet=new Set(['legacy','new']);
@@ -705,10 +1113,11 @@ function reset(){{
 }}
 ['search'].forEach(id=>document.getElementById(id).addEventListener('input',applyFilters));
 ['fp','fa'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
+
 // Boot: default to any veteran (legacy + new checked)
 document.querySelectorAll('#ms-vet .ms-option').forEach(el=>{{
   const v=el.querySelector('input').value;
-  if(v==='legacy'||v==='new'){{el.querySelector('input').checked=true;el.classList.add('selected');}}
+  if(v==='legacy'||v==='new') {{ el.querySelector('input').checked=true; el.classList.add('selected'); }}
 }});
 applyFilters();
 </script>
@@ -716,10 +1125,12 @@ applyFilters();
 </html>"""
 
 
+# ---------------------------------------------------------------------------
+# build_html — unchanged
+# ---------------------------------------------------------------------------
+
 def build_html(vet_df: pd.DataFrame, current_season: str, data_source: str = "scraped") -> str:
-    records = json.loads(
-        vet_df.to_json(orient="records")
-    )
+    records = json.loads(vet_df.to_json(orient="records"))
 
     legacy_count  = int(vet_df["legacy_veteran"].sum())
     new_count     = int(vet_df["new_veteran"].sum())
@@ -744,7 +1155,7 @@ def build_html(vet_df: pd.DataFrame, current_season: str, data_source: str = "sc
 
 
 # ---------------------------------------------------------------------------
-# Main
+# Main — unchanged
 # ---------------------------------------------------------------------------
 
 def main():
@@ -754,12 +1165,10 @@ def main():
     print(f"  Season: {current_season}  |  Date: {date.today()}")
     print(f"{'='*60}\n")
 
-    # 1. Load historical data
     print("Loading historical career CSVs...")
     hist_df = load_historical()
     print(f"  Total historical rows: {len(hist_df):,}\n")
 
-    # 2. Manual file takes priority if present — scraper is fallback
     current_stats = None
     data_source = "scraped"
 
@@ -772,7 +1181,6 @@ def main():
         print(f"Scraping {current_season} from EliteProspects...")
         try:
             current_stats = tdhepscrape.get_skaters(LEAGUES, current_season)
-            # Validate scrape — if all leagues returned 0 GP it's a silent failure
             total_gp = pd.to_numeric(current_stats.get("gp", pd.Series()), errors="coerce").sum()
             if total_gp == 0:
                 raise RuntimeError("Scraper returned data but all GP values are 0 — likely a silent failure.")
@@ -789,16 +1197,12 @@ def main():
                 "See above for instructions."
             )
 
-    # 3. Combine & clean
     print("Processing data...")
     combined = pd.concat([hist_df, current_stats], ignore_index=True)
     combined = clean_numeric(combined)
-
-    # 4. Compute veteran status
     combined = compute_veterans(combined, current_season)
+    vet_df   = build_summary(combined, current_season)
 
-    # 5. Build per-player summary
-    vet_df = build_summary(combined, current_season)
     print(f"  Players in database:  {len(vet_df):,}")
     print(f"  Legacy veterans:      {vet_df['legacy_veteran'].sum():,}")
     print(f"  New veterans:         {vet_df['new_veteran'].sum():,}")
@@ -806,17 +1210,14 @@ def main():
     print(f"  Active this season:   {vet_df['active'].sum():,}")
     print(f"  Data source:          {data_source}\n")
 
-    # 6. Write HTML to docs/index.html (served by GitHub Pages)
     html = build_html(vet_df, current_season, data_source)
     out_path = DOCS_DIR / "index.html"
     out_path.write_text(html, encoding="utf-8")
     print(f"  ✅  Wrote {out_path}  ({out_path.stat().st_size / 1_048_576:.1f} MB)")
 
-    # 7. Also save the raw CSV for reference / auditing
     csv_path = DOCS_DIR / "pro_hockey_vets_latest.csv"
     vet_df.to_csv(csv_path, index=False)
     print(f"  ✅  Wrote {csv_path}\n")
-
     print("Build complete.\n")
 
 
