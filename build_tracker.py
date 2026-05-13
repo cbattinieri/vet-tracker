@@ -288,7 +288,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .threshold-note strong {{ color:var(--gold); }}
 
   /* ---- TABLE ---- */
-  .table-wrap {{ overflow-x:auto;padding-bottom:60px; }}
   table {{ width:100%;border-collapse:collapse;font-size:13px; }}
   thead {{ position:sticky;top:0;z-index:10;background:var(--surface2); }}
   th {{ padding:10px 14px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s; }}
@@ -335,8 +334,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .mode-hint .mhl {{ color:var(--gold);font-weight:600; }}
 
   /* ---- SCOUT SIDEBAR ---- */
-  .scout-sidebar {{ position:fixed;right:0;top:0;width:300px;height:100vh;background:var(--surface);border-left:2px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;z-index:500;box-shadow:-4px 0 24px rgba(0,0,0,.5); }}
-  .scout-sidebar.open {{ transform:translateX(0); }}
+  .content-wrap {{ display:flex;align-items:stretch;overflow:hidden; }}
+  .table-wrap {{ flex:1;min-width:0;overflow-x:auto;padding-bottom:60px; }}
+  .scout-sidebar {{ width:0;overflow:hidden;flex-shrink:0;background:var(--surface);border-left:0 solid var(--border);display:flex;flex-direction:column;transition:width .25s ease,border-left-width .25s ease; }}
+  .scout-sidebar.open {{ width:300px;border-left:2px solid var(--border); }}
   .scout-hdr {{ padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0; }}
   .scout-hdr-title {{ font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text);flex:1; }}
   .scout-badge {{ background:var(--gold);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;border-radius:10px;padding:1px 8px;min-width:22px;text-align:center; }}
@@ -376,7 +377,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   tr.sel-row:hover td {{ background:rgba(232,184,75,.13)!important; }}
 
   /* ---- COMPARE VIEW ---- */
-  .compare-view {{ padding-bottom:60px; }}
+  .compare-view {{ flex:1;min-width:0;overflow-x:auto;padding-bottom:60px; }}
   .compare-topbar {{ display:flex;align-items:center;gap:16px;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20; }}
   .compare-back {{ background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;padding:7px 14px;cursor:pointer;transition:all .2s;letter-spacing:.3px;text-transform:uppercase; }}
   .compare-back:hover {{ border-color:var(--gold);color:var(--gold); }}
@@ -553,6 +554,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <span class="tab-note" id="tab-note">Career totals · GP, G, A, PTS, PPG, PIM, +/−</span>
 </div>
 
+<!-- CONTENT WRAP: flex row so sidebar pushes table, never overlaps -->
+<div class="content-wrap" id="content-wrap">
+
 <!-- MAIN TABLE -->
 <div class="table-wrap" id="table-wrap">
   <table>
@@ -638,6 +642,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
   </div>
 </div>
+</div><!-- /content-wrap -->
 
 <script>
 const D={json_data};
