@@ -37,3 +37,19 @@ jobs:
           git add docs/index.html docs/pro_hockey_vets_latest.csv
           git diff --cached --quiet || git commit -m "chore: weekly tracker update $(date -u '+%Y-%m-%d') [skip ci]"
           git push
+
+      # Mirror the refreshed data into the gated battanalytics-app embed
+      # and regenerate its redacted public preview sample.
+      - name: Sync to battanalytics-app
+        env:
+          BATTANALYTICS_PAT: ${{ secrets.BATTANALYTICS_PAT }}
+        run: |
+          git clone https://x-access-token:${BATTANALYTICS_PAT}@github.com/cbattinieri/battanalytics.git /tmp/battanalytics
+          cp docs/index.html /tmp/battanalytics/app-embeds/vet-tracker/index.html
+          python3 /tmp/battanalytics/scripts/sync_vet_tracker.py /tmp/battanalytics
+          cd /tmp/battanalytics
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add app-embeds/vet-tracker/index.html public/apps/vet-tracker/index.html
+          git diff --cached --quiet || git commit -m "chore: sync vet-tracker data $(date -u '+%Y-%m-%d')"
+          git push
