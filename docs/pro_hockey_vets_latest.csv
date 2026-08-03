@@ -341,7 +341,7 @@ Oliver Kylington,D,/player/142238/oliver-kylington,25,2,6,8,0.32,10,-2,0.9,2.6,3
 Erik Ullman,D,/player/142241/erik-ullman,32,5,24,29,0.91,12,-9,1.4,6.7,8.1,0.25,False,False,False,slovakia,—,True
 Lukas Vejdemo,C,/player/142243/lukas-vejdemo,51,18,8,26,0.51,36,13,7.7,3.4,11.2,0.22,False,False,False,shl,—,True
 Kevin Stenlund,C/RW,/player/142262/kevin-stenlund,80,4,14,18,0.22,24,-9,4.0,14.0,18.0,0.22,False,False,False,nhl,—,True
-Sheldon Rempal,RW/LW,/player/142304/sheldon-rempal,42,16,32,48,1.14,40,7,9.7,19.7,29.4,0.7,False,False,False,ahl,AHL ↕ KHL,True
+Sheldon Rempal,RW/LW,/player/142304/sheldon-rempal,42,16,32,48,1.14,40,7,9.7,19.7,29.4,0.7,False,False,False,ahl,KHL ↕ AHL,True
 Taylor Hall,LW/C,/player/14360/taylor-hall,80,18,30,48,0.6,44,6,18.0,30.0,48.0,0.6,False,False,False,nhl,—,True
 Chris Terry,LW/RW,/player/14370/chris-terry,56,10,11,21,0.38,21,-6,4.4,4.8,9.2,0.16,False,False,False,ahl,—,True
 Ryan O'Reilly,C,/player/14371/ryan-o-reilly,81,25,49,74,0.91,22,8,25.0,49.0,74.0,0.91,False,False,False,nhl,—,True
@@ -398,7 +398,7 @@ Nick Olesen,LW/RW,/player/151079/nick-olesen,51,14,31,45,0.88,32,-10,5.2,11.5,16
 A.J. Greer,LW/RW,/player/151125/a-j-greer,78,17,15,32,0.41,113,14,17.0,15.0,32.0,0.41,False,False,False,nhl,—,True
 Alexandre Carrier,D,/player/151143/alexandre-carrier,73,7,15,22,0.3,34,2,7.0,15.0,22.0,0.3,False,False,False,nhl,—,True
 Anthony Beauregard,C/RW,/player/151144/anthony-beauregard,62,16,37,53,0.85,20,-8,4.3,10.0,14.3,0.23,False,False,False,echl,—,True
-Nicolas Aubé-Kubel,RW/C,/player/151146/nicolas-aube-kubel,68,15,24,39,0.57,65,-2,6.6,11.7,18.3,0.27,False,False,False,nhl,NHL ↕ AHL,True
+Nicolas Aubé-Kubel,RW,/player/151146/nicolas-aube-kubel,68,15,24,39,0.57,65,-2,6.6,11.7,18.3,0.27,False,False,False,nhl,NHL ↕ AHL,True
 Jérémy Roy,D,/player/151150/jeremy-roy,60,4,11,15,0.25,16,2,2.5,6.8,9.3,0.16,False,False,False,khl,—,True
 Samuel Vigneault,C,/player/151163/samuel-vigneault,50,12,12,24,0.48,28,-5,4.4,4.4,8.9,0.18,False,False,False,czechia,—,True
 Roman Červenka,C/LW,/player/15130/roman-cervenka,43,19,41,60,1.4,28,26,7.0,15.2,22.2,0.52,False,False,False,czechia,—,True
@@ -581,7 +581,7 @@ Grigori Panin,D,/player/16730/grigori-panin,67,4,6,10,0.15,49,11,2.5,3.7,6.2,0.0
 Kristian Reichel,C,/player/167519/kristian-reichel,48,15,17,32,0.67,26,13,5.6,6.3,11.8,0.25,False,False,False,del,—,True
 Yevgeni Grachyov,C,/player/16752/yevgeni-grachyov,60,1,6,7,0.12,25,0,0.6,3.7,4.3,0.07,False,False,False,khl,—,True
 Anton Bengtsson,C,/player/16796/anton-bengtsson,40,5,9,14,0.35,18,0,2.2,3.9,6.0,0.15,False,False,False,shl,—,True
-Jakob Lilja,LW,/player/16800/jakob-lilja,34,6,10,16,0.47,10,-10,2.2,3.7,5.9,0.17,False,False,False,nl,NL ↕ DEL,True
+Jakob Lilja,LW,/player/16800/jakob-lilja,34,6,10,16,0.47,10,-10,2.2,3.7,5.9,0.17,False,False,False,nl,DEL ↕ NL,True
 Johan Johnsson,C/LW,/player/16813/johan-johnsson,24,0,2,2,0.08,8,-5,0.0,0.9,0.9,0.04,False,False,False,shl,—,True
 Pontus Åberg,LW/RW,/player/16835/pontus-aberg,47,9,14,23,0.49,12,3,3.6,5.6,9.2,0.2,False,False,False,nl,—,True
 Jakub Melisko,D,/player/168650/jakub-melisko,48,5,14,19,0.4,34,-6,1.4,3.9,5.3,0.11,False,False,False,slovakia,—,True
@@ -678,7 +678,7 @@ Jan Stransky,RW/LW,/player/18091/jan-stransky,23,1,4,5,0.22,2,-3,0.4,1.5,1.8,0.0
 Kevin Rooney,C/LW,/player/180925/kevin-rooney,45,13,12,25,0.56,8,-2,6.3,5.3,11.6,0.26,False,False,False,ahl,NHL ↕ AHL,True
 Robert Kousal,C/LW,/player/18093/robert-kousal,43,4,9,13,0.3,12,2,1.5,3.3,4.8,0.11,False,False,False,czechia,—,True
 Ilya Mikheyev,RW/LW,/player/180935/ilya-mikheyev,77,18,18,36,0.47,18,2,18.0,18.0,36.0,0.47,False,False,False,nhl,—,True
-Ondrej Palat,LW/RW,/player/18097/ondrej-palat,80,5,10,15,0.19,14,-11,5.0,10.0,15.0,0.19,False,False,False,nhl,—,True
+Ondřej Palát,LW/RW,/player/18097/ond%C5%99ej-palat,80,5,10,15,0.19,14,-11,5.0,10.0,15.0,0.19,False,False,False,nhl,—,True
 Miks Indrasis,C/LW/RW,/player/18106/miks-indrasis,35,5,8,13,0.37,14,-12,1.4,2.3,3.7,0.11,False,False,False,czechia,Slovakia ↕ Czechia,True
 Daniel Krenzelok,D,/player/182172/daniel-krenzelok,1,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,czechia,—,True
 Derek Grant,C/W,/player/18242/derek-grant,30,12,15,27,0.9,37,11,4.8,6.0,10.8,0.36,False,False,False,nl,—,True
@@ -903,7 +903,7 @@ Dylan Samberg,D,/player/201527/dylan-samberg,66,1,13,14,0.21,14,5,1.0,13.0,14.0,
 Nolan Sullivan,F,/player/201528/nolan-sullivan,70,9,22,31,0.44,50,10,2.4,5.9,8.4,0.12,False,False,False,echl,—,True
 Adam Capannelli,C/LW,/player/201532/adam-capannelli,19,1,4,5,0.26,13,-12,0.3,1.1,1.4,0.07,False,False,False,echl,—,True
 Maxime Comtois,LW/RW,/player/201534/maxime-comtois,54,19,15,34,0.63,77,-12,11.8,9.3,21.1,0.39,False,False,False,khl,—,True
-Arnaud Durandeau,LW,/player/201536/arnaud-durandeau,35,7,8,15,0.43,18,-7,2.0,2.7,4.7,0.13,False,False,False,ahl,AHL ↕ Slovakia,True
+Arnaud Durandeau,LW/RW,/player/201536/arnaud-durandeau,35,7,8,15,0.43,18,-7,2.0,2.7,4.7,0.13,False,False,False,ahl,AHL ↕ Slovakia,True
 Luke Grainger,RW/C,/player/201540/luke-grainger,63,19,10,29,0.46,22,-20,5.1,2.7,7.8,0.12,False,False,False,echl,—,True
 Joël Teasdale,LW/RW,/player/201546/joel-teasdale,32,12,9,21,0.66,33,-12,3.2,2.4,5.7,0.18,False,False,False,echl,ECHL ↕ Slovakia,True
 Joshua Brook,D,/player/201551/joshua-brook,42,1,8,9,0.21,19,20,0.6,5.0,5.6,0.13,False,False,False,khl,—,True
@@ -1354,7 +1354,7 @@ Noah Carroll,D,/player/240028/noah-carroll,62,4,8,12,0.19,50,4,1.1,2.2,3.2,0.05,
 Alexis Binner,D,/player/240060/alexis-binner,23,4,14,18,0.78,12,-5,1.7,5.9,7.6,0.33,False,False,False,liiga,—,True
 Linus Nässén,D,/player/240064/linus-nassen,46,4,7,11,0.24,8,-10,1.7,3.0,4.7,0.1,False,False,False,shl,—,True
 Logan Stanley,D,/player/240108/logan-stanley,76,9,17,26,0.34,128,3,9.0,17.0,26.0,0.34,False,False,False,nhl,—,True
-Louis Boudon,C,/player/240254/louis-boudon,42,15,23,38,0.9,13,6,4.5,7.0,11.5,0.27,False,False,False,liiga,ECHL ↕ Liiga,True
+Louis Boudon,C,/player/240254/louis-boudon,42,15,23,38,0.9,13,6,4.5,7.0,11.5,0.27,False,False,False,liiga,Liiga ↕ ECHL,True
 Henri Schreifels,F,/player/240375/henri-schreifels,10,1,2,3,0.3,10,2,0.3,0.5,0.8,0.08,False,False,False,echl,—,True
 Nolan Foote,LW/RW,/player/240385/nolan-foote,66,15,18,33,0.5,46,-2,7.2,7.9,15.1,0.23,False,False,False,nhl,NHL ↕ AHL,True
 Joe Leahy,D,/player/240521/joe-leahy,33,3,9,12,0.36,22,4,1.1,3.3,4.4,0.13,False,False,False,czechia,—,True
@@ -1386,7 +1386,7 @@ Robin Hanzl,C,/player/24429/robin-hanzl,39,7,19,26,0.67,18,-4,3.0,8.2,11.2,0.29,
 Linus Högberg,D,/player/244643/linus-hogberg,48,8,16,24,0.5,10,15,3.4,6.9,10.3,0.21,False,False,False,shl,—,True
 Jesper Sellgren,D,/player/244673/jesper-sellgren,52,3,14,17,0.33,8,6,1.3,6.0,7.3,0.14,False,False,False,shl,—,True
 Joel Kerkkänen,F,/player/244807/joel-kerkkanen,4,0,1,1,0.25,2,1,0.0,0.4,0.4,0.1,False,False,False,liiga,—,True
-Zach Senyshyn,RW,/player/245108/zach-senyshyn,35,10,7,17,0.49,2,4,3.7,2.4,6.1,0.17,False,False,False,del,Slovakia ↕ DEL,True
+Zach Senyshyn,RW,/player/245108/zach-senyshyn,35,10,7,17,0.49,2,4,3.7,2.4,6.1,0.17,False,False,False,del,DEL ↕ Slovakia,True
 Maurizio Colella,C/LW,/player/245120/maurizio-colella,23,4,7,11,0.48,12,-2,1.1,1.9,3.0,0.13,False,False,False,echl,—,True
 Charlie McAvoy,D,/player/245142/charlie-mcavoy,69,11,50,61,0.88,62,13,11.0,50.0,61.0,0.88,False,False,False,nhl,—,True
 Nathan Bastian,RW/C,/player/245157/nathan-bastian,40,8,2,10,0.25,23,4,6.9,1.4,8.3,0.21,False,False,False,nhl,NHL ↕ AHL,True
@@ -1672,7 +1672,7 @@ Marek Berka,LW/RW,/player/272038/marek-berka,3,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,Fa
 Přemysl Svoboda,W/C,/player/272042/p%C5%99emysl-svoboda,2,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,czechia,—,True
 Connor Ford,C/LW,/player/272068/connor-ford,46,9,17,26,0.57,10,3,3.8,7.1,10.9,0.24,False,False,False,liiga,—,True
 Michael Underwood,D,/player/272185/michael-underwood,36,0,7,7,0.19,12,17,0.0,1.9,1.9,0.05,False,False,False,echl,—,True
-Derek Daschke,D,/player/272191/derek-daschke,32,7,5,12,0.38,16,-4,2.2,1.7,3.9,0.12,False,False,False,ahl,AHL ↕ ECHL ↕ Liiga,True
+Derek Daschke,D,/player/272191/derek-daschke,32,7,5,12,0.38,16,-4,2.2,1.7,3.9,0.12,False,False,False,ahl,AHL ↕ Liiga ↕ ECHL,True
 Bryan Yoon,D,/player/272201/bryan-yoon,42,3,5,8,0.19,10,6,1.3,2.2,3.5,0.08,False,False,False,ahl,—,True
 Luke Martin,D,/player/272217/luke-martin,50,7,16,23,0.46,41,-1,3.0,6.9,9.9,0.2,False,False,False,shl,—,True
 Trent Frederic,C/W,/player/272221/trent-frederic,74,4,3,7,0.09,58,-15,4.0,3.0,7.0,0.09,False,False,False,nhl,—,True
@@ -1711,7 +1711,7 @@ Ben Jones,C/LW,/player/273677/ben-jones,65,13,22,35,0.54,26,-9,6.3,10.8,17.1,0.2
 MacKenzie Entwistle,RW/C,/player/273678/mackenzie-entwistle,49,5,6,11,0.22,41,7,2.2,2.6,4.8,0.1,False,False,False,ahl,—,True
 Gianfranco Cassaro,D,/player/273691/gianfranco-cassaro,59,9,17,26,0.44,16,14,2.4,4.6,7.0,0.12,False,False,False,echl,—,True
 Reilly Webb,D,/player/273694/reilly-webb,53,2,5,7,0.13,48,6,0.5,1.9,2.4,0.05,False,False,False,ahl,AHL ↕ ECHL,True
-Garrett Pyke,D,/player/273731/garrett-pyke,43,3,8,11,0.26,16,-14,0.8,2.5,3.3,0.08,False,False,False,ahl,AHL ↕ ECHL ↕ Liiga,True
+Garrett Pyke,D,/player/273731/garrett-pyke,43,3,8,11,0.26,16,-14,0.8,2.5,3.3,0.08,False,False,False,ahl,AHL ↕ Liiga ↕ ECHL,True
 Fyodor Gordeyev,D,/player/273797/fyodor-gordeyev,50,1,6,7,0.14,14,-26,0.6,3.7,4.3,0.09,False,False,False,khl,—,True
 Dante Sheriff,RW,/player/273800/dante-sheriff,45,10,16,26,0.58,34,-5,2.7,4.3,7.0,0.16,False,False,False,echl,—,True
 Samir Kharboutli,LW/C,/player/273828/samir-kharboutli,13,1,0,1,0.08,12,0,0.4,0.0,0.4,0.03,False,False,False,del,—,True
@@ -2512,7 +2512,7 @@ Alexander Lundqvist,D,/player/343874/alexander-lundqvist,51,4,6,10,0.2,32,2,1.7,
 Nils Åman,C/W,/player/343876/nils-aman,57,6,35,41,0.72,16,-1,2.6,15.4,18.0,0.32,False,False,False,ahl,NHL ↕ AHL,True
 Keaton Mastrodonato,RW,/player/344047/keaton-mastrodonato,67,26,25,51,0.76,24,-12,7.0,6.9,13.9,0.21,False,False,False,echl,AHL ↕ ECHL,True
 Ryan Chyzowski,LW/C,/player/344066/ryan-chyzowski,68,31,23,54,0.79,73,-2,8.5,6.2,14.8,0.22,False,False,False,echl,AHL ↕ ECHL,True
-Nick Leivermann,D,/player/344081/nick-leivermann,14,0,7,7,0.5,4,4,0.0,2.7,2.7,0.19,False,False,False,shl,AHL ↕ ECHL ↕ SHL,True
+Nick Leivermann,D,/player/344081/nick-leivermann,14,0,7,7,0.5,4,4,0.0,2.7,2.7,0.19,False,False,False,shl,AHL ↕ SHL ↕ ECHL,True
 Anton Heikkinen,LW/RW,/player/344126/anton-heikkinen,49,8,9,17,0.35,6,0,3.4,3.9,7.3,0.15,False,False,False,shl,—,True
 Fabian Herrmann,F,/player/344144/fabian-herrmann,45,3,5,8,0.18,12,-4,1.1,1.8,3.0,0.07,False,False,False,del,—,True
 Mario Zimmermann,D,/player/344166/mario-zimmermann,44,3,8,11,0.25,24,4,1.1,3.0,4.1,0.09,False,False,False,del,—,True
@@ -2857,7 +2857,7 @@ Danila Moiseyev,C,/player/379015/danila-moiseyev,0,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0
 Will Zmolek,D,/player/379104/will-zmolek,46,1,5,6,0.13,10,-7,0.4,2.0,2.5,0.05,False,False,False,ahl,AHL ↕ ECHL,True
 Hunter Johannes,W/C,/player/379289/hunter-johannes,49,13,20,33,0.67,76,7,3.5,5.4,8.9,0.18,False,False,False,ahl,AHL ↕ ECHL,True
 Charlie Dodero,D,/player/37973/charlie-dodero,47,5,22,27,0.57,63,4,1.4,5.9,7.3,0.16,False,False,False,echl,—,True
-Vitali Kravtsov,RW/LW,/player/379749/vitali-kravtsov,52,15,26,41,0.79,6,3,9.1,15.6,24.7,0.48,False,False,False,ahl,AHL ↕ KHL,True
+Vitali Kravtsov,RW/LW,/player/379749/vitali-kravtsov,52,15,26,41,0.79,6,3,9.1,15.6,24.7,0.48,False,False,False,ahl,KHL ↕ AHL,True
 Timur Akhiyarov,D,/player/379886/timur-akhiyarov,50,5,5,10,0.2,14,-6,3.1,3.1,6.2,0.12,False,False,False,khl,—,True
 Chris Kreider,LW/RW,/player/37998/chris-kreider,75,22,28,50,0.67,34,-4,22.0,28.0,50.0,0.67,False,False,False,nhl,—,True
 Griffin Ness,RW/C,/player/380229/griffin-ness,58,11,21,32,0.55,42,-3,3.0,5.7,8.6,0.15,False,False,False,echl,—,True
@@ -3091,7 +3091,7 @@ Tyler Pitlick,C/RW,/player/40064/tyler-pitlick,52,12,5,17,0.33,24,-10,6.4,2.2,8.
 Linus Omark,LW,/player/4008/linus-omark,44,9,18,27,0.61,20,6,3.8,7.5,11.3,0.26,False,False,False,shl,SHL ↕ NL,True
 Graeme McCormack,D,/player/40111/graeme-mccormack,28,3,10,13,0.46,8,7,1.1,3.7,4.8,0.17,False,False,False,czechia,—,True
 Andrew Calof,RW,/player/40211/andrew-calof,54,20,28,48,0.89,16,16,5.6,7.8,13.4,0.25,False,False,False,slovakia,—,True
-Brendan O'Donnell,W/C,/player/40229/brendan-o-donnell,32,7,3,10,0.31,18,-4,2.6,1.1,3.7,0.12,False,False,False,del,Czechia ↕ DEL,True
+Brendan O'Donnell,W/C,/player/40229/brendan-o-donnell,32,7,3,10,0.31,18,-4,2.6,1.1,3.7,0.12,False,False,False,del,DEL ↕ Czechia,True
 Jakub Strnad,LW,/player/40241/jakub-strnad,29,0,2,2,0.07,4,-5,0.0,0.7,0.7,0.02,False,False,False,czechia,—,True
 Kevin Hayes,C/LW,/player/40243/kevin-hayes,28,4,4,8,0.29,8,-1,4.0,4.0,8.0,0.29,False,False,False,nhl,—,True
 Alexei Marchenko,D,/player/40249/alexei-marchenko,63,0,17,17,0.27,28,9,0.0,10.5,10.5,0.17,False,False,False,khl,—,True
@@ -3140,7 +3140,7 @@ Jiří Sekáč,LW,/player/41014/ji%C5%99i-sekac,39,7,10,17,0.44,70,-2,2.8,4.0,6.
 Cédric Fiedler,D,/player/410168/cedric-fiedler,36,2,1,3,0.08,20,-2,0.8,0.4,1.2,0.03,False,False,False,nl,—,True
 Killian Kiecker-Olson,C,/player/410371/killian-kiecker-olson,10,0,4,4,0.4,14,-3,0.0,1.1,1.1,0.11,False,False,False,echl,—,True
 Jakob Pelletier,LW/C,/player/410525/jakob-pelletier,68,28,49,77,1.13,19,24,12.3,21.6,33.9,0.5,False,False,False,nhl,NHL ↕ AHL,True
-Pierrick Dubé,RW,/player/410529/pierrick-dube,52,12,18,30,0.58,28,-2,6.5,9.5,16.1,0.31,False,False,False,ahl,AHL ↕ KHL,True
+Pierrick Dubé,RW,/player/410529/pierrick-dube,52,12,18,30,0.58,28,-2,6.5,9.5,16.1,0.31,False,False,False,ahl,KHL ↕ AHL,True
 Louis Crevier,D,/player/410534/louis-crevier,78,7,18,25,0.32,63,-2,7.0,18.0,25.0,0.32,False,False,False,nhl,—,True
 Jacob Dion,D,/player/410556/jacob-dion,70,6,26,32,0.46,22,0,1.6,7.0,8.6,0.12,False,False,False,ahl,AHL ↕ ECHL,True
 Zachary Brooks,LW/C,/player/410558/zachary-brooks,38,1,8,9,0.24,12,-11,0.3,2.2,2.4,0.06,False,False,False,echl,—,True
@@ -3206,7 +3206,7 @@ John Parker-Jones,D/RW,/player/415612/john-parker-jones,52,6,5,11,0.21,91,-10,1.
 Ryan Rosborough,F,/player/415655/ryan-rosborough,11,2,1,3,0.27,0,1,0.5,0.3,0.8,0.07,False,False,False,echl,—,True
 Max Helgeson,F,/player/415804/max-helgeson,15,0,4,4,0.27,4,-2,0.0,1.1,1.1,0.07,False,False,False,echl,—,True
 Sullivan Mack,C/LW,/player/415811/sullivan-mack,56,17,21,38,0.68,10,27,4.6,5.7,10.3,0.18,False,False,False,ahl,AHL ↕ ECHL,True
-Thomas Caron,LW/RW,/player/415819/thomas-caron,50,6,10,16,0.32,52,0,1.9,2.8,4.8,0.1,False,False,False,liiga,ECHL ↕ Liiga,True
+Thomas Caron,LW/RW,/player/415819/thomas-caron,50,6,10,16,0.32,52,0,1.9,2.8,4.8,0.1,False,False,False,liiga,Liiga ↕ ECHL,True
 Xander Lamppa,C/LW,/player/416207/xander-lamppa,68,16,13,29,0.43,26,6,4.3,3.5,7.8,0.11,False,False,False,echl,—,True
 Oskar Sundqvist,C/RW,/player/41621/oskar-sundqvist,52,5,12,17,0.33,26,-18,5.0,12.0,17.0,0.33,False,False,False,nhl,—,True
 Nolan Hutcheson,LW,/player/416701/nolan-hutcheson,8,0,1,1,0.12,2,-2,0.0,0.3,0.3,0.04,False,False,False,echl,—,True
@@ -3396,7 +3396,7 @@ Ossi-Petteri Jaakola,LW/RW,/player/442622/ossi-petteri-jaakola,48,13,8,21,0.44,1
 Jordan Martinook,W/C,/player/44271/jordan-martinook,77,12,17,29,0.38,35,6,12.0,17.0,29.0,0.38,False,False,False,nhl,—,True
 Luke Loheit,RW/C,/player/443742/luke-loheit,64,11,22,33,0.52,55,4,3.0,5.9,8.9,0.14,False,False,False,echl,—,True
 Andrej Sustr,D,/player/44405/andrej-sustr,11,0,1,1,0.09,21,-6,0.0,0.4,0.4,0.04,False,False,False,ahl,—,True
-Noah Fuss,LW/RW,/player/444501/noah-fuss,4,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,nl,—,True
+Noah Fuss,C,/player/444501/noah-fuss,4,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,nl,—,True
 Kevin Lindemann,C,/player/444620/kevin-lindemann,5,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,nl,—,True
 Cody Kunyk,C,/player/44471/cody-kunyk,51,10,20,30,0.59,26,-17,3.7,7.4,11.1,0.22,False,False,False,del,—,True
 Mitchell Becker,D,/player/444945/mitchell-becker,6,0,0,0,0.0,4,-3,0.0,0.0,0.0,0.0,False,False,False,echl,—,True
@@ -3800,7 +3800,7 @@ Luka Profaca,D,/player/504320/luka-profaca,53,8,8,16,0.3,26,2,5.0,5.0,9.9,0.19,F
 Max Dorrington,RW/LW,/player/505134/max-dorrington,70,8,15,23,0.33,57,-13,2.3,4.2,6.6,0.09,False,False,False,ahl,AHL ↕ ECHL,True
 Caleb MacDonald,D,/player/505193/caleb-macdonald,58,3,9,12,0.21,74,-6,1.3,4.0,5.3,0.09,False,False,False,ahl,—,True
 Cooper Walker,C/RW,/player/505198/cooper-walker,37,2,4,6,0.16,8,-5,0.9,1.8,2.6,0.07,False,False,False,ahl,—,True
-Matthew Maggio,RW/LW,/player/505365/matthew-maggio,63,12,21,33,0.52,30,-3,5.3,9.2,14.5,0.23,False,False,False,ahl,—,True
+Matthew Maggio,RW/C,/player/505365/matthew-maggio,63,12,21,33,0.52,30,-3,5.3,9.2,14.5,0.23,False,False,False,ahl,—,True
 Kaleb Tiessen,D,/player/505390/kaleb-tiessen,17,0,1,1,0.06,26,-2,0.0,0.3,0.3,0.02,False,False,False,echl,—,True
 Deni Goure,C/W,/player/505395/deni-goure,68,20,29,49,0.72,28,-1,5.4,7.8,13.2,0.19,False,False,False,echl,AHL ↕ ECHL,True
 Michael Citara,RW,/player/505404/michael-citara,13,0,5,5,0.38,2,-1,0.0,1.4,1.4,0.11,False,False,False,echl,—,True
@@ -4017,7 +4017,7 @@ Maxim Groshev,D/W,/player/532511/maxim-groshev,60,3,19,22,0.37,22,17,1.3,8.9,10.
 Matic Török,RW/LW,/player/532610/matic-torok,59,18,19,37,0.63,10,12,7.6,8.0,15.5,0.26,False,False,False,liiga,—,True
 Timofei Kovgorenya,D/F,/player/532615/timofei-kovgorenya,1,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
 German Yavaș,LW/RW,/player/532623/german-yava%C8%99,46,1,3,4,0.09,65,-10,0.3,0.8,1.1,0.02,False,False,False,echl,—,True
-Bogdans Hodass,D,/player/532642/bogdans-hodass,44,2,7,9,0.2,77,1,0.5,2.2,2.7,0.06,False,False,False,echl,ECHL ↕ Liiga,True
+Bogdans Hodass,D,/player/532642/bogdans-hodass,44,2,7,9,0.2,77,1,0.5,2.2,2.7,0.06,False,False,False,echl,Liiga ↕ ECHL,True
 Josh Davies,LW/C,/player/532703/josh-davies,47,9,4,13,0.28,81,-1,2.6,1.1,3.7,0.08,False,False,False,ahl,AHL ↕ ECHL,True
 Rami Määttä,D,/player/534171/rami-maatta,59,6,16,22,0.37,14,5,2.5,6.7,9.2,0.16,False,False,False,liiga,—,True
 Jiri Pärssinen,D,/player/534178/jiri-parssinen,35,4,6,10,0.29,6,2,1.7,2.5,4.2,0.12,False,False,False,liiga,—,True
@@ -5208,7 +5208,7 @@ Artyom Shchuchinov,D,/player/780044/artyom-shchuchinov,26,1,2,3,0.12,10,0,0.6,1.
 Alexander Rykov,RW/LW,/player/780049/alexander-rykov,56,8,7,15,0.27,14,3,5.0,4.3,9.3,0.17,False,False,False,khl,—,True
 Igor Bardin,D,/player/780075/igor-bardin,15,0,3,3,0.2,0,2,0.0,1.9,1.9,0.13,False,False,False,khl,—,True
 Yegor Smirnov,RW/C,/player/780087/yegor-smirnov,13,0,1,1,0.08,0,0,0.0,0.6,0.6,0.05,False,False,False,khl,—,True
-Mikhail Ilyin,LW/RW,/player/780088/mikhail-ilyin,73,14,32,46,0.63,20,4,8.7,19.5,28.2,0.39,False,False,False,ahl,AHL ↕ KHL,True
+Mikhail Ilyin,LW/RW,/player/780088/mikhail-ilyin,73,14,32,46,0.63,20,4,8.7,19.5,28.2,0.39,False,False,False,ahl,KHL ↕ AHL,True
 Vitali Pesterev,D,/player/780100/vitali-pesterev,1,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
 Zac Leslie,D,/player/78063/zac-leslie,28,5,15,20,0.71,15,4,1.8,5.6,7.4,0.26,False,False,False,del,—,True
 Andro Kaderli,RW,/player/781049/andro-kaderli,49,4,9,13,0.27,76,-4,1.7,3.9,5.6,0.11,False,False,False,shl,—,True
@@ -5713,7 +5713,7 @@ Jesse Pärssinen,C/LW,/player/925310/jesse-parssinen,23,1,0,1,0.04,4,-4,0.4,0.0,
 Ola Palme,D,/player/925620/ola-palme,5,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,shl,—,True
 Sergei Shirokov,LW,/player/9264/sergei-shirokov,56,6,12,18,0.32,12,-5,3.7,7.4,11.2,0.2,False,False,False,khl,—,True
 Christopher Tierney,C,/player/92677/christopher-tierney,44,7,12,19,0.43,8,-20,2.8,4.8,7.6,0.17,False,False,False,nl,—,True
-Jesse Graham,D,/player/92681/jesse-graham,36,5,16,21,0.58,21,6,1.8,4.8,6.6,0.18,False,False,False,nl,Slovakia ↕ NL,True
+Jesse Graham,D,/player/92681/jesse-graham,36,5,16,21,0.58,21,6,1.8,4.8,6.6,0.18,False,False,False,nl,NL ↕ Slovakia,True
 Jan-Mikael Järvinen,C,/player/9272/jan-mikael-jarvinen,60,11,27,38,0.63,4,-7,4.6,11.3,16.0,0.27,False,False,False,liiga,—,True
 Constantin Braun,D/LW,/player/9273/constantin-braun,17,2,5,7,0.41,4,3,0.7,1.8,2.6,0.15,False,False,False,del,—,True
 Oliver Bjorkstrand,RW,/player/92803/oliver-bjorkstrand,80,12,20,32,0.4,16,-14,12.0,20.0,32.0,0.4,False,False,False,nhl,—,True
@@ -5870,7 +5870,7 @@ Nathan MacKinnon,C/RW,/player/99204/nathan-mackinnon,80,53,74,127,1.59,39,57,53.
 Radan Lenc,LW/RW,/player/99493/radan-lenc,51,24,13,37,0.73,42,11,8.9,4.8,13.7,0.27,False,False,False,czechia,—,True
 Jordann Perret,RW,/player/99556/jordann-perret,40,6,11,17,0.42,29,5,2.2,4.1,6.3,0.16,False,False,False,czechia,—,True
 Mike Künzle,RW/LW,/player/99566/mike-kunzle,37,8,10,18,0.49,26,5,3.2,4.0,7.2,0.19,False,False,False,nl,—,True
-Daniil Prokhorov,RW,/player/996513/daniil-prokhorov,24,1,0,1,0.04,2,-2,0.6,0.0,0.6,0.02,False,False,False,ahl,AHL ↕ KHL,True
+Daniil Prokhorov,RW,/player/996513/daniil-prokhorov,24,1,0,1,0.04,2,-2,0.6,0.0,0.6,0.02,False,False,False,ahl,KHL ↕ AHL,True
 Dennis Rasmussen,C,/player/9985/dennis-rasmussen,52,20,17,37,0.71,14,3,8.6,7.3,15.9,0.31,False,False,False,shl,—,True
 Erik Flood,D,/player/99862/erik-flood,54,1,23,24,0.44,52,1,0.3,6.4,6.7,0.12,False,False,False,slovakia,—,True
 Aliaksandr Vishneuski,C/LW,https://www.eliteprospects.com/player/1000162/aliaksandr-vishneuski,2,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,czechia,—,False
@@ -6575,7 +6575,7 @@ Cody Almond,C/LW,https://www.eliteprospects.com/player/11683/cody-almond,307,56,
 Matus Trencan,LW,https://www.eliteprospects.com/player/116881/matus-trencan,27,1,3,4,0.15,4,-10,0.3,0.8,1.1,0.04,False,False,False,slovakia,—,False
 Oliver Kosecky,D,https://www.eliteprospects.com/player/116886/oliver-kosecky,84,1,6,7,0.08,53,-21,0.3,1.7,2.0,0.02,False,False,False,slovakia,—,False
 C.J. Stretch,C,https://www.eliteprospects.com/player/11689/c.j.-stretch,165,53,73,126,0.76,178,-55,17.5,24.8,42.3,0.26,False,False,False,del,—,False
-Chase De Leo,LW/C,https://www.eliteprospects.com/player/116909/chase-de-leo,548,141,224,365,0.67,169,-47,62.0,98.6,160.6,0.29,True,False,False,ahl,AHL ↕ KHL ↕ NL,False
+Chase De Leo,LW/C,https://www.eliteprospects.com/player/116909/chase-de-leo,548,141,224,365,0.67,169,-47,62.0,98.6,160.6,0.29,True,False,False,ahl,KHL ↕ AHL ↕ NL,False
 Jordan Rowley,D,https://www.eliteprospects.com/player/11691/jordan-rowley,63,3,12,15,0.24,38,8,1.3,5.0,6.3,0.1,False,False,False,liiga,—,False
 Will Petschenig,D/F,https://www.eliteprospects.com/player/116966/will-petschenig,144,4,9,13,0.09,69,-15,1.6,3.3,4.9,0.03,False,False,False,echl,—,False
 Carter Verhaeghe,C/LW,https://www.eliteprospects.com/player/116967/carter-verhaeghe,733,265,323,588,0.8,343,124,209.5,239.4,449.0,0.61,True,False,False,nhl,—,True
@@ -6662,7 +6662,7 @@ Stepan Novotny,C/RW,https://www.eliteprospects.com/player/11833/stepan-novotny,1
 Henrik Borgström,C/W,https://www.eliteprospects.com/player/118332/henrik-borgstrom,415,94,137,231,0.56,113,-25,47.6,65.8,113.4,0.27,True,False,False,nl,—,True
 Frank Gymer,C,https://www.eliteprospects.com/player/118333/frank-gymer,156,13,21,34,0.22,38,-13,5.7,9.0,14.7,0.09,False,False,False,liiga,—,False
 Tomas Kubalik,RW,https://www.eliteprospects.com/player/11834/tomas-kubalik,161,26,32,58,0.36,86,-15,9.9,12.8,22.8,0.14,False,False,False,czechia,—,False
-Marly Quince,C,https://www.eliteprospects.com/player/118344/marly-quince,172,55,49,104,0.6,167,-1,15.2,13.6,28.8,0.17,False,False,False,del,Slovakia ↕ DEL,False
+Marly Quince,C,https://www.eliteprospects.com/player/118344/marly-quince,172,55,49,104,0.6,167,-1,15.2,13.6,28.8,0.17,False,False,False,del,DEL ↕ Slovakia,False
 Yves Müller,D,https://www.eliteprospects.com/player/11835/yves-muller,89,3,9,12,0.13,36,-20,1.2,3.6,4.8,0.05,False,False,False,nl,—,False
 Roman Schlagenhauf,C,https://www.eliteprospects.com/player/11836/roman-schlagenhauf,185,23,21,44,0.24,109,-36,9.2,8.4,17.6,0.1,False,False,False,nl,—,False
 Pascal Berger,W/C,https://www.eliteprospects.com/player/11837/pascal-berger,460,68,54,122,0.27,181,-70,27.2,21.6,48.8,0.11,True,False,False,nl,—,False
@@ -6760,7 +6760,7 @@ Tim Vanstone,C/RW,https://www.eliteprospects.com/player/120242/tim-vanstone,17,4
 Matt Smaby,D,https://www.eliteprospects.com/player/12027/matt-smaby,84,5,16,21,0.25,157,16,1.8,5.9,7.8,0.09,False,False,False,del,—,False
 Jacob Micflikier,LW/RW,https://www.eliteprospects.com/player/12031/jacob-micflikier,179,60,58,118,0.66,88,30,24.7,23.7,48.5,0.27,False,False,False,shl,—,False
 Sean Sullivan,D,https://www.eliteprospects.com/player/12051/sean-sullivan,235,18,64,82,0.35,83,-7,6.7,23.7,30.3,0.13,False,False,True,del,—,False
-Jayce Hawryluk,RW/C,https://www.eliteprospects.com/player/120626/jayce-hawryluk,384,67,137,204,0.53,380,-24,34.4,64.0,98.4,0.26,True,False,False,slovakia,Slovakia ↕ NL,False
+Jayce Hawryluk,RW/C,https://www.eliteprospects.com/player/120626/jayce-hawryluk,384,67,137,204,0.53,380,-24,34.4,64.0,98.4,0.26,True,False,False,slovakia,NL ↕ Slovakia,False
 Patrick Maroon,LW/RW,https://www.eliteprospects.com/player/12063/patrick-maroon,700,104,153,257,0.37,892,1,104.0,153.0,257.0,0.37,True,False,False,nhl,—,False
 Ryan Gagnon,D,https://www.eliteprospects.com/player/120637/ryan-gagnon,184,6,18,24,0.13,190,-46,1.6,4.9,6.5,0.04,False,False,False,echl,—,False
 Dysin Mayo,D,https://www.eliteprospects.com/player/120638/dysin-mayo,595,37,118,155,0.26,435,-36,18.4,54.4,72.8,0.12,True,False,False,nhl,NHL ↕ AHL,True
@@ -6967,7 +6967,7 @@ Brendan Smith,D,https://www.eliteprospects.com/player/12506/brendan-smith,568,29
 Riley Nash,C,https://www.eliteprospects.com/player/12507/riley-nash,574,86,135,221,0.39,172,25,60.8,102.0,162.8,0.28,True,False,False,ahl,—,False
 Kevin Marshall,D,https://www.eliteprospects.com/player/12508/kevin-marshall,190,10,25,35,0.18,257,-10,3.9,9.8,13.8,0.07,False,False,True,del,—,False
 Aaron Palushaj,RW/LW,https://www.eliteprospects.com/player/12513/aaron-palushaj,263,85,105,190,0.72,226,-16,37.2,45.2,82.4,0.31,True,False,False,nl,—,False
-Eric Tangradi,LW,https://www.eliteprospects.com/player/12514/eric-tangradi,291,100,111,211,0.73,255,15,44.9,50.1,95.0,0.33,True,False,False,ahl,AHL ↕ KHL,False
+Eric Tangradi,LW,https://www.eliteprospects.com/player/12514/eric-tangradi,291,100,111,211,0.73,255,15,44.9,50.1,95.0,0.33,True,False,False,ahl,KHL ↕ AHL,False
 Will Weber,D,https://www.eliteprospects.com/player/12515/will-weber,464,17,46,63,0.14,747,30,5.7,15.6,21.3,0.05,True,False,False,del,—,True
 Drew Schiestel,D,https://www.eliteprospects.com/player/12516/drew-schiestel,14,0,5,5,0.36,9,-2,0.0,1.4,1.4,0.1,False,False,False,echl,—,False
 Wayne Simmonds,RW,https://www.eliteprospects.com/player/12517/wayne-simmonds,513,124,118,242,0.47,681,-87,124.0,118.0,242.0,0.47,True,False,False,nhl,—,False
@@ -7325,7 +7325,7 @@ Trevor Gillies,LW,https://www.eliteprospects.com/player/13776/trevor-gillies,100
 Joël Chouinard,D,https://www.eliteprospects.com/player/13783/joel-chouinard,264,36,119,155,0.59,144,41,9.9,32.6,42.5,0.16,True,False,False,echl,—,False
 Luke Adam,C/LW,https://www.eliteprospects.com/player/13785/luke-adam,543,143,220,363,0.67,330,-45,49.6,77.0,126.6,0.23,True,False,False,echl,—,True
 Scott Glennie,RW/C,https://www.eliteprospects.com/player/13799/scott-glennie,45,7,13,20,0.44,34,-9,3.1,5.7,8.8,0.2,False,False,False,ahl,—,False
-Yannick Hänggi,D,https://www.eliteprospects.com/player/137998/yannick-hanggi,51,1,5,6,0.12,18,-17,0.4,1.9,2.2,0.04,False,False,False,nl,NL ↕ DEL,False
+Yannick Hänggi,D,https://www.eliteprospects.com/player/137998/yannick-hanggi,51,1,5,6,0.12,18,-17,0.4,1.9,2.2,0.04,False,False,False,nl,DEL ↕ NL,False
 Derek Hulak,LW,https://www.eliteprospects.com/player/13821/derek-hulak,147,26,29,55,0.37,36,21,11.4,12.8,24.2,0.16,False,False,False,ahl,—,False
 Marek Biro,D,https://www.eliteprospects.com/player/13835/marek-biro,62,1,4,5,0.08,30,-12,0.3,1.1,1.4,0.02,False,False,False,slovakia,—,False
 Andrew Yogan,C/LW,https://www.eliteprospects.com/player/13839/andrew-yogan,193,66,100,166,0.86,143,17,19.5,29.1,48.7,0.25,False,False,True,del,—,True
@@ -7391,7 +7391,7 @@ Gustav Bouramman,D,https://www.eliteprospects.com/player/142252/gustav-bouramman
 Daniel Bernhardt,RW/LW,https://www.eliteprospects.com/player/142253/daniel-bernhardt,14,1,1,2,0.14,0,-1,0.4,0.4,0.9,0.06,False,False,False,shl,—,False
 Oscar Nord,C/RW,https://www.eliteprospects.com/player/142261/oscar-nord,1,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,shl,—,False
 Kevin Stenlund,C/RW,https://www.eliteprospects.com/player/142262/kevin-stenlund,662,100,118,218,0.33,318,-59,69.6,76.3,145.9,0.22,True,False,False,nhl,—,True
-Sheldon Rempal,RW/LW,https://www.eliteprospects.com/player/142304/sheldon-rempal,459,157,207,364,0.79,249,-40,78.5,102.6,181.1,0.39,True,False,False,ahl,AHL ↕ KHL,True
+Sheldon Rempal,RW/LW,https://www.eliteprospects.com/player/142304/sheldon-rempal,459,157,207,364,0.79,249,-40,78.5,102.6,181.1,0.39,True,False,False,ahl,KHL ↕ AHL,True
 Joey Raats,D,https://www.eliteprospects.com/player/142426/joey-raats,52,3,7,10,0.19,12,2,0.8,1.9,2.7,0.05,False,False,False,echl,—,False
 Myles McGurty,D,https://www.eliteprospects.com/player/142909/myles-mcgurty,206,5,54,59,0.29,138,12,1.4,14.6,15.9,0.08,False,False,True,echl,—,False
 Mitchell Vanderlaan,LW,https://www.eliteprospects.com/player/142942/mitchell-vanderlaan,48,7,11,18,0.38,12,10,1.9,3.0,4.9,0.1,False,False,False,echl,—,False
@@ -8026,7 +8026,7 @@ Gavin Gould,C/LW,https://www.eliteprospects.com/player/160147/gavin-gould,169,31
 Jansen Harkins,C/W,https://www.eliteprospects.com/player/160158/jansen-harkins,536,82,130,212,0.4,256,-5,45.8,71.6,117.5,0.22,True,False,False,nhl,—,True
 Nikita Kryskin,D,https://www.eliteprospects.com/player/160273/nikita-kryskin,17,1,2,3,0.18,4,-6,0.6,1.2,1.9,0.11,False,False,False,khl,—,False
 Toni Rajala,LW/RW,https://www.eliteprospects.com/player/16035/toni-rajala,529,198,214,412,0.78,201,80,79.7,86.1,165.8,0.31,True,False,False,nl,—,True
-Teemu Pulkkinen,RW,https://www.eliteprospects.com/player/16036/teemu-pulkkinen,504,158,145,303,0.6,293,-13,90.5,80.0,170.6,0.34,True,False,False,del,Slovakia ↕ DEL,False
+Teemu Pulkkinen,RW,https://www.eliteprospects.com/player/16036/teemu-pulkkinen,504,158,145,303,0.6,293,-13,90.5,80.0,170.6,0.34,True,False,False,del,DEL ↕ Slovakia,False
 Mikael Granlund,C/W,https://www.eliteprospects.com/player/16037/mikael-granlund,802,180,383,563,0.7,247,-45,180.0,383.0,563.0,0.7,True,False,False,nhl,—,True
 Joonas Donskoi,RW/LW,https://www.eliteprospects.com/player/16039/joonas-donskoi,474,80,128,208,0.44,116,25,80.0,128.0,208.0,0.44,True,False,False,nhl,—,False
 Valentin Busch,F,https://www.eliteprospects.com/player/160391/valentin-busch,141,8,19,27,0.19,59,-7,3.0,7.0,10.0,0.07,False,False,False,del,—,False
@@ -8238,7 +8238,7 @@ Nikandrosz Galanisz,F,https://www.eliteprospects.com/player/16763/nikandrosz-gal
 István Sofron,RW,https://www.eliteprospects.com/player/16764/istvan-sofron,106,30,37,67,0.63,113,-18,8.5,10.7,19.3,0.18,False,False,False,slovakia,—,False
 Villiam Haag,RW,https://www.eliteprospects.com/player/16790/villiam-haag,5,1,0,1,0.2,0,-2,0.4,0.0,0.4,0.08,False,False,False,shl,—,False
 Anton Bengtsson,C,https://www.eliteprospects.com/player/16796/anton-bengtsson,516,92,104,196,0.38,122,10,39.6,44.7,84.3,0.16,True,False,False,shl,—,True
-Jakob Lilja,LW,https://www.eliteprospects.com/player/16800/jakob-lilja,533,129,136,265,0.5,125,17,65.0,66.6,131.6,0.25,True,False,False,del,NL ↕ DEL,True
+Jakob Lilja,LW,https://www.eliteprospects.com/player/16800/jakob-lilja,533,129,136,265,0.5,125,17,65.0,66.6,131.6,0.25,True,False,False,del,DEL ↕ NL,True
 Oscar Klefbom,D,https://www.eliteprospects.com/player/16804/oscar-klefbom,301,31,102,133,0.44,70,-37,31.0,102.0,133.0,0.44,True,False,False,nhl,—,False
 Johan Johnsson,C/LW,https://www.eliteprospects.com/player/16813/johan-johnsson,318,25,41,66,0.21,72,-32,10.8,17.6,28.4,0.09,True,False,False,shl,—,True
 Edwin Hedberg,LW/RW,https://www.eliteprospects.com/player/16833/edwin-hedberg,257,43,41,84,0.33,157,-23,20.7,20.7,41.3,0.16,False,False,True,czechia,Liiga ↕ Czechia,False
@@ -9033,7 +9033,7 @@ Scott Eansor,C/LW,https://www.eliteprospects.com/player/194931/scott-eansor,99,2
 Chris Dodero,C/LW,https://www.eliteprospects.com/player/194939/chris-dodero,106,15,37,52,0.49,69,7,4.1,10.0,14.0,0.13,False,False,False,echl,—,True
 Connor Welsh,D,https://www.eliteprospects.com/player/194946/connor-welsh,260,24,116,140,0.54,131,-15,6.5,31.6,38.1,0.15,False,True,False,slovakia,—,True
 Dakota Joshua,LW/C,https://www.eliteprospects.com/player/194948/dakota-joshua,387,67,70,137,0.35,284,-4,57.0,55.2,112.2,0.29,True,False,False,nhl,—,True
-Tyler Nanne,D,https://www.eliteprospects.com/player/194952/tyler-nanne,60,9,12,21,0.35,36,-4,2.6,3.4,6.0,0.1,False,False,False,liiga,ECHL ↕ Liiga,False
+Tyler Nanne,D,https://www.eliteprospects.com/player/194952/tyler-nanne,60,9,12,21,0.35,36,-4,2.6,3.4,6.0,0.1,False,False,False,liiga,Liiga ↕ ECHL,False
 David Sklenička,D,https://www.eliteprospects.com/player/194986/david-sklenicka,559,52,144,196,0.35,355,10,25.7,68.4,94.1,0.17,True,False,False,nl,—,True
 Oscar Hedman,D,https://www.eliteprospects.com/player/1950/oscar-hedman,52,3,10,13,0.25,12,-7,1.3,4.3,5.6,0.11,False,False,False,shl,—,False
 Carl D'Amour-Belizario,D,https://www.eliteprospects.com/player/195017/carl-d-amour-belizario,1,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
@@ -10036,7 +10036,7 @@ Filip Vrabel,C/LW,https://www.eliteprospects.com/player/223462/filip-vrabel,181,
 Zack MacEwen,C/RW,https://www.eliteprospects.com/player/223475/zack-macewen,430,67,89,156,0.36,516,-66,39.0,48.7,87.7,0.2,True,False,False,nhl,—,True
 Bailey Webster,D,https://www.eliteprospects.com/player/223483/bailey-webster,4,0,1,1,0.25,0,-1,0.0,0.3,0.3,0.08,False,False,False,ahl,AHL ↕ ECHL,False
 Philippe Myers,D,https://www.eliteprospects.com/player/223515/philippe-myers,474,38,122,160,0.34,427,59,22.3,72.2,94.5,0.2,True,False,False,nhl,—,True
-Ian Scheid,D,https://www.eliteprospects.com/player/223664/ian-scheid,163,23,40,63,0.39,55,1,8.6,14.8,23.4,0.14,False,False,False,del,Slovakia ↕ DEL,False
+Ian Scheid,D,https://www.eliteprospects.com/player/223664/ian-scheid,163,23,40,63,0.39,55,1,8.6,14.8,23.4,0.14,False,False,False,del,DEL ↕ Slovakia,False
 Blake Christensen,LW,https://www.eliteprospects.com/player/223668/blake-christensen,140,39,44,83,0.59,102,-15,10.9,11.9,22.8,0.16,False,False,False,echl,—,True
 Mark Marin,D,https://www.eliteprospects.com/player/223774/mark-marin,200,9,21,30,0.15,136,-15,5.6,13.0,18.6,0.09,False,False,True,khl,—,False
 Nikita Lyamkin,D,https://www.eliteprospects.com/player/223789/nikita-lyamkin,548,27,130,157,0.29,305,36,16.7,80.6,97.3,0.18,True,False,False,khl,—,True
@@ -10568,7 +10568,7 @@ Logan Stanley,D,https://www.eliteprospects.com/player/240108/logan-stanley,395,2
 Adam Mascherin,LW/C,https://www.eliteprospects.com/player/240112/adam-mascherin,173,47,51,98,0.57,96,7,20.6,22.4,43.0,0.25,False,False,False,shl,—,False
 John Dunbar,RW,https://www.eliteprospects.com/player/24015/john-dunbar,61,19,31,50,0.82,38,-13,5.1,8.4,13.5,0.22,False,False,False,echl,—,False
 Brad Drobot,RW,https://www.eliteprospects.com/player/24019/brad-drobot,90,1,1,2,0.02,98,-6,0.3,0.3,0.5,0.01,False,False,False,echl,—,False
-Louis Boudon,C,https://www.eliteprospects.com/player/240254/louis-boudon,113,35,54,89,0.79,53,8,10.1,15.5,25.6,0.23,False,False,False,echl,ECHL ↕ Liiga,True
+Louis Boudon,C,https://www.eliteprospects.com/player/240254/louis-boudon,113,35,54,89,0.79,53,8,10.1,15.5,25.6,0.23,False,False,False,echl,Liiga ↕ ECHL,True
 Andreas Røykås Marthinsen,D,https://www.eliteprospects.com/player/240255/andreas-roykas-marthinsen,8,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,shl,—,False
 Henri Schreifels,F,https://www.eliteprospects.com/player/240375/henri-schreifels,11,1,2,3,0.27,10,1,0.3,0.5,0.8,0.07,False,False,False,echl,—,True
 Nolan Foote,LW/RW,https://www.eliteprospects.com/player/240385/nolan-foote,287,83,88,171,0.6,158,12,40.4,40.4,80.8,0.28,False,True,False,nhl,NHL ↕ AHL,True
@@ -10676,7 +10676,7 @@ Niklas Torgersson,D,https://www.eliteprospects.com/player/244954/niklas-torgerss
 Justin Lemcke,D,https://www.eliteprospects.com/player/244978/justin-lemcke,90,2,21,23,0.26,74,20,0.6,5.9,6.4,0.07,False,False,False,slovakia,—,False
 Kris Myllari,D,https://www.eliteprospects.com/player/244979/kris-myllari,333,33,100,133,0.4,109,12,8.9,27.2,36.1,0.11,True,False,False,ahl,AHL ↕ ECHL,False
 Jake Bricknell,C/RW,https://www.eliteprospects.com/player/245100/jake-bricknell,98,10,15,25,0.26,133,-9,2.7,4.1,6.8,0.07,False,False,False,echl,—,False
-Zach Senyshyn,RW,https://www.eliteprospects.com/player/245108/zach-senyshyn,475,120,99,219,0.46,115,34,49.9,42.0,91.9,0.19,True,False,False,slovakia,Slovakia ↕ DEL,True
+Zach Senyshyn,RW,https://www.eliteprospects.com/player/245108/zach-senyshyn,475,120,99,219,0.46,115,34,49.9,42.0,91.9,0.19,True,False,False,slovakia,DEL ↕ Slovakia,True
 Ted Nichol,C,https://www.eliteprospects.com/player/245111/ted-nichol,87,8,7,15,0.17,52,-8,2.2,1.9,4.1,0.05,False,False,False,echl,—,False
 Chase Pearson,C/LW,https://www.eliteprospects.com/player/245117/chase-pearson,220,46,61,107,0.49,108,-22,17.5,24.9,42.4,0.19,False,False,True,slovakia,—,False
 Maurizio Colella,C/LW,https://www.eliteprospects.com/player/245120/maurizio-colella,181,27,54,81,0.45,113,-42,7.3,14.6,21.9,0.12,False,False,False,echl,—,True
@@ -11438,7 +11438,7 @@ Max Gildon,D,https://www.eliteprospects.com/player/272169/max-gildon,197,15,70,8
 Michael Underwood,D,https://www.eliteprospects.com/player/272185/michael-underwood,109,0,13,13,0.12,104,-8,0.0,3.5,3.5,0.03,False,False,False,echl,—,True
 William Lockwood,RW,https://www.eliteprospects.com/player/272186/william-lockwood,251,52,62,114,0.45,132,26,22.9,28.4,51.3,0.2,False,False,True,ahl,—,False
 Tomas Skvaridlo,RW,https://www.eliteprospects.com/player/27219/tomas-skvaridlo,50,12,13,25,0.5,26,7,3.4,3.6,7.0,0.14,False,False,False,slovakia,—,False
-Derek Daschke,D,https://www.eliteprospects.com/player/272191/derek-daschke,179,41,72,113,0.63,68,-7,11.4,19.8,31.1,0.17,False,False,False,echl,AHL ↕ ECHL ↕ Liiga,True
+Derek Daschke,D,https://www.eliteprospects.com/player/272191/derek-daschke,179,41,72,113,0.63,68,-7,11.4,19.8,31.1,0.17,False,False,False,echl,AHL ↕ Liiga ↕ ECHL,True
 Brenden Rons,D,https://www.eliteprospects.com/player/272192/brenden-rons,16,1,1,2,0.12,6,-8,0.3,0.3,0.5,0.03,False,False,False,echl,—,False
 Jack Doremus,C/W,https://www.eliteprospects.com/player/272200/jack-doremus,75,30,33,63,0.84,42,-7,8.1,9.1,17.2,0.23,False,False,False,echl,—,False
 Bryan Yoon,D,https://www.eliteprospects.com/player/272201/bryan-yoon,149,15,36,51,0.34,37,21,4.9,11.4,16.3,0.11,False,False,False,ahl,—,True
@@ -11526,7 +11526,7 @@ Reilly Webb,D,https://www.eliteprospects.com/player/273694/reilly-webb,121,5,14,
 Ryan Nicholson,D,https://www.eliteprospects.com/player/273701/ryan-nicholson,2,0,1,1,0.5,0,0,0.0,0.3,0.3,0.15,False,False,False,echl,—,False
 Colton Kalezic,C,https://www.eliteprospects.com/player/273722/colton-kalezic,42,5,6,11,0.26,12,5,1.4,1.6,3.0,0.07,False,False,False,echl,—,False
 Stephen Calisti,D,https://www.eliteprospects.com/player/273728/stephen-calisti,15,2,0,2,0.13,2,-2,0.5,0.0,0.5,0.03,False,False,False,echl,—,False
-Garrett Pyke,D,https://www.eliteprospects.com/player/273731/garrett-pyke,91,5,21,26,0.29,32,-14,1.4,6.3,7.7,0.08,False,False,False,echl,AHL ↕ ECHL ↕ Liiga,True
+Garrett Pyke,D,https://www.eliteprospects.com/player/273731/garrett-pyke,91,5,21,26,0.29,32,-14,1.4,6.3,7.7,0.08,False,False,False,echl,AHL ↕ Liiga ↕ ECHL,True
 Fyodor Gordeyev,D,https://www.eliteprospects.com/player/273797/fyodor-gordeyev,287,26,69,95,0.33,222,-5,9.1,25.1,34.2,0.12,False,True,False,khl,—,True
 Dante Sheriff,RW,https://www.eliteprospects.com/player/273800/dante-sheriff,217,52,91,143,0.66,110,-17,14.0,24.6,38.6,0.18,False,False,True,echl,—,True
 Vít Seemann,D,https://www.eliteprospects.com/player/273821/vit-seemann,0,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,czechia,—,False
@@ -11817,7 +11817,7 @@ Joona Ikonen,RW,https://www.eliteprospects.com/player/284831/joona-ikonen,441,10
 Ville Heikkala,LW,https://www.eliteprospects.com/player/284835/ville-heikkala,141,9,16,25,0.18,59,6,3.8,6.7,10.5,0.07,False,False,False,liiga,—,True
 Juho Korhonen,D,https://www.eliteprospects.com/player/284849/juho-korhonen,9,0,1,1,0.11,0,2,0.0,0.4,0.4,0.04,False,False,False,liiga,—,False
 Justin Lee,D,https://www.eliteprospects.com/player/284854/justin-lee,145,15,41,56,0.39,177,2,4.1,11.6,15.6,0.11,False,False,False,slovakia,—,True
-David Noël,D,https://www.eliteprospects.com/player/284907/david-noel,60,11,18,29,0.48,40,16,3.1,5.3,8.4,0.14,False,False,False,liiga,ECHL ↕ Liiga,False
+David Noël,D,https://www.eliteprospects.com/player/284907/david-noel,60,11,18,29,0.48,40,16,3.1,5.3,8.4,0.14,False,False,False,liiga,Liiga ↕ ECHL,False
 Pierre-Olivier Joseph,D,https://www.eliteprospects.com/player/284911/pierre-olivier-joseph,363,23,87,110,0.3,223,-38,15.2,59.0,74.2,0.2,True,False,False,nhl,—,True
 Jason Imbeault,RW,https://www.eliteprospects.com/player/284913/jason-imbeault,2,0,0,0,0.0,2,-1,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
 Félix Bibeau,C/LW,https://www.eliteprospects.com/player/284916/felix-bibeau,56,6,15,21,0.38,42,1,2.1,5.4,7.5,0.13,False,False,False,ahl,AHL ↕ ECHL,False
@@ -11861,7 +11861,7 @@ Lauri Pajuniemi,RW,https://www.eliteprospects.com/player/285894/lauri-pajuniemi,
 Nuutti Viitasalo,D,https://www.eliteprospects.com/player/285895/nuutti-viitasalo,227,25,50,75,0.33,119,6,10.5,21.1,31.6,0.14,False,False,True,liiga,—,True
 Heikki Harju,F,https://www.eliteprospects.com/player/286064/heikki-harju,2,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,liiga,—,False
 Nick Mangone,F,https://www.eliteprospects.com/player/286444/nick-mangone,12,1,3,4,0.33,12,-2,0.3,0.8,1.1,0.09,False,False,False,echl,—,False
-Cole Fonstad,C/LW,https://www.eliteprospects.com/player/286578/cole-fonstad,220,41,57,98,0.45,36,-45,16.2,21.8,37.9,0.17,False,False,True,liiga,ECHL ↕ Liiga ↕ DEL,False
+Cole Fonstad,C/LW,https://www.eliteprospects.com/player/286578/cole-fonstad,220,41,57,98,0.45,36,-45,16.2,21.8,37.9,0.17,False,False,True,liiga,Liiga ↕ ECHL ↕ DEL,False
 Billy Sweezey,D,https://www.eliteprospects.com/player/286681/billy-sweezey,347,7,51,58,0.17,443,20,3.1,23.0,26.1,0.08,True,False,False,ahl,—,True
 Matt Filipe,C/LW,https://www.eliteprospects.com/player/286690/matt-filipe,133,16,22,38,0.29,101,7,6.7,9.0,15.7,0.12,False,False,False,ahl,—,False
 Chantz Petruic,C/LW,https://www.eliteprospects.com/player/286715/chantz-petruic,12,1,2,3,0.25,6,0,0.3,0.5,0.8,0.07,False,False,False,echl,—,False
@@ -12241,7 +12241,7 @@ Dennis Cesana,D,https://www.eliteprospects.com/player/300960/dennis-cesana,226,2
 Wyatt Aamodt,D,https://www.eliteprospects.com/player/300969/wyatt-aamodt,251,18,56,74,0.29,169,69,8.5,24.6,33.1,0.13,False,False,True,ahl,—,True
 Adam Goodsir,F,https://www.eliteprospects.com/player/300977/adam-goodsir,114,10,24,34,0.3,93,-5,2.7,6.5,9.2,0.08,False,False,False,echl,—,False
 Billy Jerry,C/RW,https://www.eliteprospects.com/player/300979/billy-jerry,60,8,7,15,0.25,33,-14,2.2,1.9,4.1,0.07,False,False,False,echl,—,False
-Casey Dornbach,C/W,https://www.eliteprospects.com/player/300980/casey-dornbach,127,18,59,77,0.61,50,-11,5.0,17.2,22.2,0.17,False,False,False,ahl,AHL ↕ ECHL ↕ Liiga,False
+Casey Dornbach,C/W,https://www.eliteprospects.com/player/300980/casey-dornbach,127,18,59,77,0.61,50,-11,5.0,17.2,22.2,0.17,False,False,False,ahl,AHL ↕ Liiga ↕ ECHL,False
 Matt Foley,D,https://www.eliteprospects.com/player/300989/matt-foley,78,3,13,16,0.21,77,-7,0.8,4.2,5.0,0.06,False,False,False,echl,AHL ↕ ECHL,False
 Tyler Jette,D,https://www.eliteprospects.com/player/300990/tyler-jette,134,4,15,19,0.14,30,-1,1.1,4.1,5.1,0.04,False,False,False,echl,—,True
 Robbie Stucker,D,https://www.eliteprospects.com/player/300993/robbie-stucker,146,6,54,60,0.41,68,-11,1.6,14.6,16.2,0.11,False,False,False,echl,—,True
@@ -12556,7 +12556,7 @@ Terry Broadhurst,LW/RW,https://www.eliteprospects.com/player/31612/terry-broadhu
 Mitchell Miller,D,https://www.eliteprospects.com/player/316129/mitchell-miller,159,32,78,110,0.69,58,30,17.8,40.5,58.3,0.37,False,False,False,khl,—,True
 Stephan Vigier,C,https://www.eliteprospects.com/player/31614/stephan-vigier,70,24,26,50,0.71,19,9,6.5,7.0,13.5,0.19,False,False,False,echl,—,False
 Dalton Duhart,C/LW,https://www.eliteprospects.com/player/316141/dalton-duhart,124,13,21,34,0.27,60,-23,3.5,5.7,9.2,0.07,False,False,False,echl,—,True
-Louis Leblanc,C/RW,https://www.eliteprospects.com/player/31615/louis-leblanc,15,4,1,5,0.33,51,-11,1.2,0.3,1.5,0.1,False,False,False,slovakia,KHL ↕ Slovakia ↕ NL,False
+Louis Leblanc,C/RW,https://www.eliteprospects.com/player/31615/louis-leblanc,15,4,1,5,0.33,51,-11,1.2,0.3,1.5,0.1,False,False,False,slovakia,KHL ↕ NL ↕ Slovakia,False
 Jake Schmaltz,LW/C,https://www.eliteprospects.com/player/316160/jake-schmaltz,68,10,14,24,0.35,12,11,4.4,6.2,10.6,0.16,False,False,False,ahl,—,True
 Cole Caufield,LW/RW,https://www.eliteprospects.com/player/316168/cole-caufield,376,174,142,316,0.84,58,-6,171.2,139.8,311.0,0.83,True,False,False,nhl,—,True
 C.J. Ludwig,D,https://www.eliteprospects.com/player/31617/c.j.-ludwig,45,2,6,8,0.18,110,8,0.5,1.6,2.2,0.05,False,False,False,echl,AHL ↕ ECHL,False
@@ -12704,7 +12704,7 @@ Perttu Kiesilä,C,https://www.eliteprospects.com/player/321035/perttu-kiesila,18
 Tyler Irvine,RW,https://www.eliteprospects.com/player/321057/tyler-irvine,117,26,35,61,0.52,54,-30,7.5,10.6,18.2,0.16,False,False,False,echl,AHL ↕ ECHL,False
 Raymond Brice,C/LW,https://www.eliteprospects.com/player/321063/raymond-brice,135,24,13,37,0.27,37,-4,6.5,3.5,10.0,0.07,False,False,False,echl,—,True
 Tim Washe,C/LW,https://www.eliteprospects.com/player/321143/tim-washe,77,16,16,32,0.42,42,0,8.2,8.7,16.9,0.22,False,False,False,nhl,NHL ↕ AHL,True
-Jacob Bengtsson,D,https://www.eliteprospects.com/player/321188/jacob-bengtsson,43,1,11,12,0.28,22,-9,0.3,3.0,3.2,0.07,False,False,False,ahl,AHL ↕ ECHL ↕ SHL,False
+Jacob Bengtsson,D,https://www.eliteprospects.com/player/321188/jacob-bengtsson,43,1,11,12,0.28,22,-9,0.3,3.0,3.2,0.07,False,False,False,ahl,AHL ↕ SHL ↕ ECHL,False
 Blake Lizotte,C/LW,https://www.eliteprospects.com/player/321198/blake-lizotte,435,55,90,145,0.33,207,36,55.0,90.0,145.0,0.33,True,False,False,nhl,—,True
 Michaël Loichat,LW/RW,https://www.eliteprospects.com/player/32122/michael-loichat,16,0,2,2,0.12,4,1,0.0,0.8,0.8,0.05,False,False,False,nl,—,False
 Taylor Brierley,D,https://www.eliteprospects.com/player/321294/taylor-brierley,25,0,3,3,0.12,6,-2,0.0,0.8,0.8,0.03,False,False,False,echl,—,False
@@ -12855,7 +12855,7 @@ Daniel Carbis,LW,https://www.eliteprospects.com/player/32857/daniel-carbis,1,1,0
 Frédéric Iglesias,D,https://www.eliteprospects.com/player/32860/frederic-iglesias,89,3,12,15,0.17,18,-20,1.2,4.8,6.0,0.07,False,False,False,nl,—,False
 Ryan Jasinsky,RW,https://www.eliteprospects.com/player/32861/ryan-jasinsky,5,0,0,0,0.0,60,-3,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
 Michael Kirkpatrick,RW/C,https://www.eliteprospects.com/player/32863/michael-kirkpatrick,189,68,106,174,0.92,75,45,18.4,28.6,47.0,0.25,False,False,False,ahl,AHL ↕ ECHL,False
-Jordan Caron,RW/LW,https://www.eliteprospects.com/player/32870/jordan-caron,212,48,59,107,0.5,258,-29,20.6,26.3,46.9,0.22,False,False,True,nl,NL ↕ DEL,False
+Jordan Caron,RW/LW,https://www.eliteprospects.com/player/32870/jordan-caron,212,48,59,107,0.5,258,-29,20.6,26.3,46.9,0.22,False,False,True,nl,DEL ↕ NL,False
 Jonathan Marchessault,LW/RW,https://www.eliteprospects.com/player/32872/jonathan-marchessault,785,268,314,582,0.74,384,-9,264.6,312.3,577.0,0.74,True,False,False,nhl,—,True
 Kirill Polokhov,D,https://www.eliteprospects.com/player/328734/kirill-polokhov,129,1,3,4,0.03,25,-23,0.6,1.9,2.5,0.02,False,False,False,khl,—,False
 Denis Zernov,C,https://www.eliteprospects.com/player/328741/denis-zernov,540,112,140,252,0.47,288,49,69.4,86.8,156.2,0.29,True,False,False,khl,—,True
@@ -13189,7 +13189,7 @@ Tamás Kánya,C/W,https://www.eliteprospects.com/player/344031/tamas-kanya,3,0,0
 Patrick Gazich,D,https://www.eliteprospects.com/player/344032/patrick-gazich,6,0,2,2,0.33,2,1,0.0,0.5,0.5,0.08,False,False,False,echl,—,False
 Keaton Mastrodonato,RW,https://www.eliteprospects.com/player/344047/keaton-mastrodonato,202,73,73,146,0.72,92,-40,20.4,19.9,40.3,0.2,False,False,True,ahl,AHL ↕ ECHL,True
 Ryan Chyzowski,LW/C,https://www.eliteprospects.com/player/344066/ryan-chyzowski,251,85,75,160,0.64,209,-13,24.5,20.6,45.1,0.18,False,False,True,ahl,AHL ↕ ECHL,True
-Nick Leivermann,D,https://www.eliteprospects.com/player/344081/nick-leivermann,102,13,45,58,0.57,48,5,4.0,15.4,19.4,0.19,False,False,False,echl,AHL ↕ ECHL ↕ SHL,True
+Nick Leivermann,D,https://www.eliteprospects.com/player/344081/nick-leivermann,102,13,45,58,0.57,48,5,4.0,15.4,19.4,0.19,False,False,False,echl,AHL ↕ SHL ↕ ECHL,True
 Anton Heikkinen,LW/RW,https://www.eliteprospects.com/player/344126/anton-heikkinen,160,34,33,67,0.42,32,12,14.6,14.2,28.8,0.18,False,False,False,shl,—,True
 Fabian Herrmann,F,https://www.eliteprospects.com/player/344144/fabian-herrmann,97,11,14,25,0.26,26,-3,4.1,5.2,9.2,0.09,False,False,False,del,—,True
 Mario Zimmermann,D,https://www.eliteprospects.com/player/344166/mario-zimmermann,217,9,30,39,0.18,54,-3,3.3,11.1,14.4,0.07,False,False,True,del,—,True
@@ -13776,7 +13776,7 @@ Adam Eby,D,https://www.eliteprospects.com/player/374303/adam-eby,38,0,3,3,0.08,1
 Nicolas Deslauriers,LW/D,https://www.eliteprospects.com/player/37437/nicolas-deslauriers,623,50,45,95,0.15,726,-68,48.3,43.9,92.2,0.15,True,False,False,nhl,—,True
 Jérôme Gauthier-Leduc,D,https://www.eliteprospects.com/player/37441/jerome-gauthier-leduc,177,26,44,70,0.4,139,-77,10.7,18.0,28.8,0.16,False,False,False,nl,—,False
 Étienne Boutet,D,https://www.eliteprospects.com/player/37444/etienne-boutet,122,5,17,22,0.18,131,-6,1.4,4.6,5.9,0.05,False,False,False,ahl,AHL ↕ ECHL,False
-Alexandre Mallet,RW/C,https://www.eliteprospects.com/player/37446/alexandre-mallet,371,76,96,172,0.46,471,2,25.8,32.1,57.9,0.16,True,False,False,czechia,Czechia ↕ DEL,False
+Alexandre Mallet,RW/C,https://www.eliteprospects.com/player/37446/alexandre-mallet,371,76,96,172,0.46,471,2,25.8,32.1,57.9,0.16,True,False,False,czechia,DEL ↕ Czechia,False
 Noah Dunham,F,https://www.eliteprospects.com/player/374519/noah-dunham,132,7,12,19,0.14,22,6,2.6,4.4,7.0,0.05,False,False,False,del,—,True
 David Gilbert,C/LW,https://www.eliteprospects.com/player/37467/david-gilbert,93,20,23,43,0.46,62,-13,5.8,6.7,12.5,0.13,False,False,False,czechia,—,False
 Mikaël Tam,D,https://www.eliteprospects.com/player/37469/mikael-tam,150,13,32,45,0.3,101,-40,3.9,9.3,13.2,0.09,False,False,False,khl,KHL ↕ Slovakia,False
@@ -13963,7 +13963,7 @@ Rick Pinkston,D,https://www.eliteprospects.com/player/37965/rick-pinkston,159,6,
 Niko Laakkonen,LW/RW,https://www.eliteprospects.com/player/37968/niko-laakkonen,34,0,3,3,0.09,8,2,0.0,1.3,1.3,0.04,False,False,False,liiga,—,False
 Kirill Spitsenko,D,https://www.eliteprospects.com/player/379717/kirill-spitsenko,28,1,2,3,0.11,4,-1,0.6,1.2,1.9,0.07,False,False,False,khl,—,False
 Charlie Dodero,D,https://www.eliteprospects.com/player/37973/charlie-dodero,222,21,63,84,0.38,358,5,5.7,17.0,22.7,0.1,False,False,True,echl,—,True
-Vitali Kravtsov,RW/LW,https://www.eliteprospects.com/player/379749/vitali-kravtsov,443,108,119,227,0.51,70,31,68.0,73.9,141.9,0.32,True,False,False,ahl,AHL ↕ KHL,True
+Vitali Kravtsov,RW/LW,https://www.eliteprospects.com/player/379749/vitali-kravtsov,443,108,119,227,0.51,70,31,68.0,73.9,141.9,0.32,True,False,False,ahl,KHL ↕ AHL,True
 Ivan Lapshin,C,https://www.eliteprospects.com/player/379750/ivan-lapshin,1,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,khl,—,False
 Randy Cure,D,https://www.eliteprospects.com/player/37980/randy-cure,88,3,11,14,0.16,58,-2,0.8,3.0,3.8,0.04,False,False,False,echl,—,False
 Timur Akhiyarov,D,https://www.eliteprospects.com/player/379886/timur-akhiyarov,235,13,20,33,0.14,60,-9,8.1,12.4,20.5,0.09,False,False,True,khl,—,True
@@ -14084,7 +14084,7 @@ Igor Martynov,RW/LW,https://www.eliteprospects.com/player/383105/igor-martynov,3
 Arkhip Ledenkov,F,https://www.eliteprospects.com/player/383127/arkhip-ledenkov,5,0,0,0,0.0,0,-2,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
 Vladislav Mikhalchuk,RW,https://www.eliteprospects.com/player/383130/vladislav-mikhalchuk,112,16,25,41,0.37,66,-18,4.3,6.8,11.1,0.1,False,False,False,echl,—,False
 Kael Mouillierat,C/LW,https://www.eliteprospects.com/player/38319/kael-mouillierat,353,84,93,177,0.5,428,27,32.6,36.9,69.5,0.2,True,False,False,del,—,False
-Ben Youds,D,https://www.eliteprospects.com/player/38325/ben-youds,185,10,66,76,0.41,139,-28,4.2,27.8,32.0,0.17,False,False,False,ahl,AHL ↕ ECHL ↕ SHL,False
+Ben Youds,D,https://www.eliteprospects.com/player/38325/ben-youds,185,10,66,76,0.41,139,-28,4.2,27.8,32.0,0.17,False,False,False,ahl,AHL ↕ SHL ↕ ECHL,False
 Channing Boe,D,https://www.eliteprospects.com/player/38328/channing-boe,55,1,13,14,0.25,35,18,0.3,3.5,3.8,0.07,False,False,False,echl,—,False
 Michael Bartuli,F,https://www.eliteprospects.com/player/383282/michael-bartuli,50,0,1,1,0.02,24,0,0.0,0.4,0.4,0.01,False,False,False,del,—,False
 Miska Kukkonen,D,https://www.eliteprospects.com/player/383305/miska-kukkonen,322,18,50,68,0.21,293,22,7.6,21.0,28.6,0.09,True,False,False,liiga,—,True
@@ -14531,7 +14531,7 @@ Andrew Calof,RW,https://www.eliteprospects.com/player/40211/andrew-calof,499,150
 Mitch Zion,C,https://www.eliteprospects.com/player/40222/mitch-zion,28,3,5,8,0.29,4,-12,0.8,1.4,2.2,0.08,False,False,False,echl,—,False
 Michael Borkowski,LW/C,https://www.eliteprospects.com/player/40223/michael-borkowski,130,27,38,65,0.5,42,16,8.1,10.8,18.9,0.15,False,False,False,ahl,AHL ↕ ECHL,False
 Tyson Wilson,D,https://www.eliteprospects.com/player/40227/tyson-wilson,82,6,18,24,0.29,49,-5,1.6,4.9,6.5,0.08,False,False,False,ahl,AHL ↕ ECHL,False
-Brendan O'Donnell,W/C,https://www.eliteprospects.com/player/40229/brendan-o-donnell,432,169,183,352,0.81,180,-26,54.8,60.6,115.4,0.27,True,False,False,del,Czechia ↕ DEL,True
+Brendan O'Donnell,W/C,https://www.eliteprospects.com/player/40229/brendan-o-donnell,432,169,183,352,0.81,180,-26,54.8,60.6,115.4,0.27,True,False,False,del,DEL ↕ Czechia,True
 Zach Franko,LW,https://www.eliteprospects.com/player/40230/zach-franko,29,10,8,18,0.62,0,-9,2.7,2.2,4.9,0.17,False,False,False,echl,—,False
 Oskar Kvist,LW/RW,https://www.eliteprospects.com/player/402325/oskar-kvist,127,5,7,12,0.09,41,-14,2.2,3.0,5.2,0.04,False,False,False,shl,—,False
 Michael Parks,RW,https://www.eliteprospects.com/player/40237/michael-parks,151,51,55,106,0.7,126,6,15.5,16.5,32.0,0.21,False,False,False,slovakia,ECHL ↕ Slovakia,False
@@ -14651,7 +14651,7 @@ Cédric Fiedler,D,https://www.eliteprospects.com/player/410168/cedric-fiedler,86
 Ivan Telegin,LW/RW,https://www.eliteprospects.com/player/41028/ivan-telegin,350,47,63,110,0.31,124,47,29.1,39.1,68.2,0.19,True,False,False,khl,—,False
 Peter Regin,C,https://www.eliteprospects.com/player/4104/peter-regin,377,74,148,222,0.59,118,33,44.5,86.1,130.6,0.35,True,False,False,del,—,False
 Jakob Pelletier,LW/C,https://www.eliteprospects.com/player/410525/jakob-pelletier,293,90,146,236,0.81,93,59,45.8,74.3,120.1,0.41,False,True,False,nhl,NHL ↕ AHL,True
-Pierrick Dubé,RW,https://www.eliteprospects.com/player/410529/pierrick-dube,242,85,83,168,0.69,169,16,37.0,36.8,73.7,0.3,False,False,True,khl,AHL ↕ KHL,True
+Pierrick Dubé,RW,https://www.eliteprospects.com/player/410529/pierrick-dube,242,85,83,168,0.69,169,16,37.0,36.8,73.7,0.3,False,False,True,khl,KHL ↕ AHL,True
 Trent Daavettila,C/LW,https://www.eliteprospects.com/player/41053/trent-daavettila,71,25,55,80,1.13,26,30,6.8,14.8,21.6,0.3,False,False,False,echl,—,False
 Louis Crevier,D,https://www.eliteprospects.com/player/410534/louis-crevier,252,14,38,52,0.21,115,-17,11.8,29.0,40.8,0.16,False,False,True,nhl,—,True
 Patrick Guay,C/LW,https://www.eliteprospects.com/player/410551/patrick-guay,174,44,85,129,0.74,101,-40,12.2,23.6,35.8,0.21,False,False,False,echl,—,False
@@ -14736,7 +14736,7 @@ Emil Lilleberg,D,https://www.eliteprospects.com/player/415548/emil-lilleberg,289
 John Parker-Jones,D/RW,https://www.eliteprospects.com/player/415612/john-parker-jones,197,33,34,67,0.34,311,-46,9.2,9.4,18.6,0.09,False,False,True,echl,—,True
 Ivan Jankovic,D,https://www.eliteprospects.com/player/41577/ivan-jankovic,117,7,13,20,0.17,122,-1,2.0,3.6,5.6,0.05,False,False,False,slovakia,—,False
 Sullivan Mack,C/LW,https://www.eliteprospects.com/player/415811/sullivan-mack,57,17,21,38,0.67,10,27,4.6,5.7,10.3,0.18,False,False,False,ahl,AHL ↕ ECHL,True
-Thomas Caron,LW/RW,https://www.eliteprospects.com/player/415819/thomas-caron,213,33,52,85,0.4,251,-16,10.8,15.3,26.2,0.12,False,False,True,echl,ECHL ↕ Liiga,True
+Thomas Caron,LW/RW,https://www.eliteprospects.com/player/415819/thomas-caron,213,33,52,85,0.4,251,-16,10.8,15.3,26.2,0.12,False,False,True,echl,Liiga ↕ ECHL,True
 Mathias Åhman,D,https://www.eliteprospects.com/player/41606/mathias-ahman,7,0,1,1,0.14,2,0,0.0,0.3,0.3,0.04,False,False,False,echl,—,False
 Xander Lamppa,C/LW,https://www.eliteprospects.com/player/416207/xander-lamppa,149,30,38,68,0.46,64,-9,8.1,10.3,18.4,0.12,False,False,False,echl,—,True
 Oskar Sundqvist,C/RW,https://www.eliteprospects.com/player/41621/oskar-sundqvist,659,94,156,250,0.38,319,-33,78.9,132.5,211.4,0.32,True,False,False,nhl,—,True
@@ -15272,7 +15272,7 @@ Jimmy Oligny,D,https://www.eliteprospects.com/player/45244/jimmy-oligny,435,16,7
 Marc-André Lévesque,D,https://www.eliteprospects.com/player/45251/marc-andre-levesque,72,5,25,30,0.42,60,1,1.4,6.8,8.1,0.11,False,False,False,echl,—,False
 Christian Sandberg,C,https://www.eliteprospects.com/player/4526/christian-sandberg,79,4,8,12,0.15,38,-7,1.7,3.4,5.2,0.07,False,False,False,shl,—,False
 Jonathan Huberdeau,LW/RW,https://www.eliteprospects.com/player/45261/jonathan-huberdeau,766,225,469,694,0.91,408,2,225.0,469.0,694.0,0.91,True,False,False,nhl,—,True
-Jonathan Racine,D,https://www.eliteprospects.com/player/45270/jonathan-racine,230,11,36,47,0.2,452,19,3.5,12.1,15.6,0.07,False,False,True,ahl,AHL ↕ ECHL ↕ Liiga,False
+Jonathan Racine,D,https://www.eliteprospects.com/player/45270/jonathan-racine,230,11,36,47,0.2,452,19,3.5,12.1,15.6,0.07,False,False,True,ahl,AHL ↕ Liiga ↕ ECHL,False
 Yannick Veilleux,LW,https://www.eliteprospects.com/player/45271/yannick-veilleux,540,116,143,259,0.48,752,3,45.4,53.7,99.0,0.18,True,False,False,del,—,True
 Olivier Archambault,LW/RW,https://www.eliteprospects.com/player/45274/olivier-archambault,374,130,231,361,0.97,304,48,37.5,65.9,103.5,0.28,True,False,False,slovakia,—,True
 Guillaume Naud,D/LW,https://www.eliteprospects.com/player/45277/guillaume-naud,118,11,19,30,0.25,94,-35,4.0,7.0,11.0,0.09,False,False,False,del,—,False
@@ -15341,7 +15341,7 @@ Kristoff Kontos,C,https://www.eliteprospects.com/player/45545/kristoff-kontos,50
 Frank Corrado,D,https://www.eliteprospects.com/player/45547/frank-corrado,204,7,51,58,0.28,114,3,3.8,25.6,29.4,0.14,False,False,True,khl,—,False
 Nick Cousins,C/LW,https://www.eliteprospects.com/player/45550/nick-cousins,750,98,157,255,0.34,488,0,91.3,142.4,233.7,0.31,True,False,False,nhl,—,True
 Michael MacIntyre,D,https://www.eliteprospects.com/player/45552/michael-macintyre,1,0,0,0,0.0,0,2,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
-Brett Ritchie,RW,https://www.eliteprospects.com/player/45554/brett-ritchie,466,80,65,145,0.31,323,-10,57.9,44.5,102.4,0.22,True,False,False,del,Slovakia ↕ DEL,False
+Brett Ritchie,RW,https://www.eliteprospects.com/player/45554/brett-ritchie,466,80,65,145,0.31,323,-10,57.9,44.5,102.4,0.22,True,False,False,del,DEL ↕ Slovakia,False
 Brandon Alderson,RW/LW,https://www.eliteprospects.com/player/45555/brandon-alderson,209,75,73,148,0.71,192,-9,21.2,20.7,41.9,0.2,False,False,True,slovakia,Slovakia ↕ Czechia,False
 Vincent Trocheck,C,https://www.eliteprospects.com/player/45560/vincent-trocheck,798,227,374,601,0.75,563,-3,227.0,374.0,601.0,0.75,True,False,False,nhl,—,True
 Anthony Camara,W/C,https://www.eliteprospects.com/player/45561/anthony-camara,472,139,144,283,0.6,638,-37,58.9,62.2,121.1,0.26,True,False,False,del,—,True
@@ -16295,7 +16295,7 @@ Timofei Kovgorenya,D/F,https://www.eliteprospects.com/player/532615/timofei-kovg
 German Yavaș,F,https://www.eliteprospects.com/player/532623/german-yava%C8%99,91,7,6,13,0.14,133,-13,1.9,1.6,3.5,0.04,False,False,False,echl,—,True
 Yegor Klavdiyev,F,https://www.eliteprospects.com/player/532626/yegor-klavdiyev,5,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,khl,—,False
 Roberts Cjunskis,F,https://www.eliteprospects.com/player/532639/roberts-cjunskis,28,1,1,2,0.07,6,-5,0.4,0.4,0.8,0.03,False,False,False,nl,—,False
-Bogdans Hodass,D,https://www.eliteprospects.com/player/532642/bogdans-hodass,84,5,13,18,0.21,118,-2,1.4,3.8,5.2,0.06,False,False,False,echl,ECHL ↕ Liiga,True
+Bogdans Hodass,D,https://www.eliteprospects.com/player/532642/bogdans-hodass,84,5,13,18,0.21,118,-2,1.4,3.8,5.2,0.06,False,False,False,echl,Liiga ↕ ECHL,True
 Josh Davies,LW/C,https://www.eliteprospects.com/player/532703/josh-davies,100,20,9,29,0.29,127,-18,5.6,2.4,8.0,0.08,False,False,False,echl,AHL ↕ ECHL,True
 Rami Määttä,D,https://www.eliteprospects.com/player/534171/rami-maatta,303,9,57,66,0.22,98,37,3.8,23.9,27.7,0.09,False,True,False,liiga,—,True
 Jiri Pärssinen,D,https://www.eliteprospects.com/player/534178/jiri-parssinen,66,4,8,12,0.18,8,-9,1.7,3.4,5.0,0.08,False,False,False,liiga,—,True
@@ -17584,7 +17584,7 @@ Shane Lachance,LW,https://www.eliteprospects.com/player/659483/shane-lachance,65
 Tomas Matousek,LW,https://www.eliteprospects.com/player/66012/tomas-matousek,414,44,58,102,0.25,346,-1,12.6,16.6,29.2,0.07,True,False,False,slovakia,—,True
 Juraj Roznik,RW,https://www.eliteprospects.com/player/66014/juraj-roznik,14,0,2,2,0.14,2,0,0.0,0.6,0.6,0.04,False,False,False,slovakia,—,False
 Filip Vasko,LW/RW,https://www.eliteprospects.com/player/66015/filip-vasko,41,11,10,21,0.51,18,-6,3.1,2.8,5.9,0.14,False,False,False,slovakia,—,False
-Peter Trska,D,https://www.eliteprospects.com/player/66016/peter-trska,285,21,72,93,0.33,172,-40,7.8,26.6,34.4,0.12,True,False,False,czechia,Czechia ↕ DEL,False
+Peter Trska,D,https://www.eliteprospects.com/player/66016/peter-trska,285,21,72,93,0.33,172,-40,7.8,26.6,34.4,0.12,True,False,False,czechia,DEL ↕ Czechia,False
 Michal Toman,RW/C,https://www.eliteprospects.com/player/66017/michal-toman,9,0,1,1,0.11,0,-1,0.0,0.3,0.3,0.03,False,False,False,slovakia,—,False
 Toni Suuronen,LW/RW,https://www.eliteprospects.com/player/66059/toni-suuronen,373,36,30,66,0.18,203,-27,15.1,12.6,27.7,0.07,True,False,False,liiga,—,False
 Matthew Poitras,C/RW,https://www.eliteprospects.com/player/661581/matthew-poitras,178,37,75,112,0.63,102,5,20.2,44.2,64.4,0.36,False,False,False,nhl,NHL ↕ AHL,True
@@ -18133,7 +18133,7 @@ Lauri Eskola,LW/RW,https://www.eliteprospects.com/player/747313/lauri-eskola,3,0
 Jérémy Chèvre,F,https://www.eliteprospects.com/player/747319/jeremy-chevre,2,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,nl,—,False
 Niko Korkola,D,https://www.eliteprospects.com/player/747437/niko-korkola,61,3,9,12,0.2,10,2,1.3,3.8,5.0,0.08,False,False,False,liiga,—,True
 Nooa Nyman,D,https://www.eliteprospects.com/player/747445/nooa-nyman,1,0,0,0,0.0,0,-2,0.0,0.0,0.0,0.0,False,False,False,liiga,—,False
-Valtteri Piironen,D,https://www.eliteprospects.com/player/747446/valtteri-piironen,22,0,0,0,0.0,6,-8,0.0,0.0,0.0,0.0,False,False,False,echl,AHL ↕ ECHL ↕ Liiga,True
+Valtteri Piironen,D,https://www.eliteprospects.com/player/747446/valtteri-piironen,22,0,0,0,0.0,6,-8,0.0,0.0,0.0,0.0,False,False,False,echl,AHL ↕ Liiga ↕ ECHL,True
 Oskari Remes,W/C,https://www.eliteprospects.com/player/747448/oskari-remes,44,4,1,5,0.11,0,-4,1.7,0.4,2.1,0.05,False,False,False,liiga,—,True
 Arttu Tuhkala,D,https://www.eliteprospects.com/player/747458/arttu-tuhkala,71,4,7,11,0.15,29,-6,1.7,3.0,4.6,0.06,False,False,False,liiga,—,True
 Colton Hargrove,C/LW,https://www.eliteprospects.com/player/74775/colton-hargrove,460,134,177,311,0.68,429,53,44.8,58.3,103.2,0.22,True,False,False,echl,—,True
@@ -18394,7 +18394,7 @@ Makar Khanin,RW,https://www.eliteprospects.com/player/780027/makar-khanin,4,0,0,
 Artyom Shchuchinov,D,https://www.eliteprospects.com/player/780044/artyom-shchuchinov,96,4,11,15,0.16,18,5,2.5,6.8,9.3,0.1,False,False,False,khl,—,True
 Alexander Rykov,RW/LW,https://www.eliteprospects.com/player/780049/alexander-rykov,113,16,13,29,0.26,28,6,9.9,8.1,18.0,0.16,False,False,False,khl,—,True
 Yegor Smirnov,RW/C,https://www.eliteprospects.com/player/780087/yegor-smirnov,23,0,3,3,0.13,0,1,0.0,1.9,1.9,0.08,False,False,False,khl,—,True
-Mikhail Ilyin,LW/RW,https://www.eliteprospects.com/player/780088/mikhail-ilyin,223,33,74,107,0.48,56,26,20.5,45.5,66.0,0.3,False,False,True,khl,AHL ↕ KHL,True
+Mikhail Ilyin,LW/RW,https://www.eliteprospects.com/player/780088/mikhail-ilyin,223,33,74,107,0.48,56,26,20.5,45.5,66.0,0.3,False,False,True,khl,KHL ↕ AHL,True
 Vitali Pesterev,D,https://www.eliteprospects.com/player/780100/vitali-pesterev,9,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
 Joona Karevaara,RW/LW,https://www.eliteprospects.com/player/7802/joona-karevaara,51,3,3,6,0.12,8,-12,1.3,1.3,2.5,0.05,False,False,False,liiga,—,False
 Mike McMurtry,C,https://www.eliteprospects.com/player/78049/mike-mcmurtry,152,32,50,82,0.54,50,-24,11.2,18.1,29.3,0.19,False,False,False,ahl,AHL ↕ ECHL,False
@@ -18580,7 +18580,7 @@ Ilya Lyuzenkov,C,https://www.eliteprospects.com/player/828103/ilya-lyuzenkov,35,
 Alexander Pershakov,RW,https://www.eliteprospects.com/player/828110/alexander-pershakov,47,2,2,4,0.09,35,-5,1.2,1.2,2.5,0.05,False,False,False,khl,—,True
 Yaroslav Belyakov,D,https://www.eliteprospects.com/player/828235/yaroslav-belyakov,18,0,0,0,0.0,6,-11,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
 Mischa Geisser,D/LW,https://www.eliteprospects.com/player/828973/mischa-geisser,44,0,2,2,0.05,43,-2,0.0,0.8,0.8,0.02,False,False,False,nl,—,True
-Kerby Rychel,LW,https://www.eliteprospects.com/player/82918/kerby-rychel,289,69,107,176,0.61,271,-34,32.0,51.6,83.6,0.29,True,False,False,ahl,AHL ↕ KHL,False
+Kerby Rychel,LW,https://www.eliteprospects.com/player/82918/kerby-rychel,289,69,107,176,0.61,271,-34,32.0,51.6,83.6,0.29,True,False,False,ahl,KHL ↕ AHL,False
 Mitch Nardi,C,https://www.eliteprospects.com/player/82944/mitch-nardi,8,0,2,2,0.25,0,-2,0.0,0.5,0.5,0.06,False,False,False,echl,—,False
 Artyom Voroshilo,RW,https://www.eliteprospects.com/player/83046/artyom-voroshilo,124,5,10,15,0.12,112,-19,3.1,6.2,9.3,0.08,False,False,False,khl,—,False
 Jonne Virtanen,C/W,https://www.eliteprospects.com/player/8305/jonne-virtanen,300,17,39,56,0.19,212,-16,7.1,16.4,23.5,0.08,True,False,False,liiga,—,False
@@ -18631,7 +18631,7 @@ Ben Carroll,D,https://www.eliteprospects.com/player/84091/ben-carroll,239,9,67,7
 John Quenneville,LW,https://www.eliteprospects.com/player/84092/john-quenneville,366,100,136,236,0.64,350,-37,44.0,60.3,104.4,0.29,True,False,False,liiga,—,False
 Greg Chase,RW/C,https://www.eliteprospects.com/player/84097/greg-chase,266,64,96,160,0.6,276,-23,18.3,29.5,47.8,0.18,True,False,False,ahl,AHL ↕ ECHL,False
 Brett Pollock,C/W,https://www.eliteprospects.com/player/84111/brett-pollock,420,114,144,258,0.61,327,-15,36.2,47.5,83.7,0.2,True,False,False,slovakia,—,False
-Clayton Kirichenko,D,https://www.eliteprospects.com/player/84112/clayton-kirichenko,44,0,5,5,0.11,18,-12,0.0,1.4,1.4,0.03,False,False,False,del,Slovakia ↕ DEL,False
+Clayton Kirichenko,D,https://www.eliteprospects.com/player/84112/clayton-kirichenko,44,0,5,5,0.11,18,-12,0.0,1.4,1.4,0.03,False,False,False,del,DEL ↕ Slovakia,False
 Nikolas Koberstein,D,https://www.eliteprospects.com/player/84120/nikolas-koberstein,9,1,0,1,0.11,21,2,0.3,0.0,0.3,0.03,False,False,False,echl,—,False
 Nelson Gadoury,F,https://www.eliteprospects.com/player/84122/nelson-gadoury,10,0,0,0,0.0,14,-2,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
 Tomas Slovak,D,https://www.eliteprospects.com/player/8420/tomas-slovak,236,4,29,33,0.14,170,0,1.4,9.2,10.6,0.04,False,False,True,slovakia,—,False
@@ -18998,7 +18998,7 @@ Josh Healey,D,https://www.eliteprospects.com/player/88698/josh-healey,287,4,29,3
 Tyler Lewington,D,https://www.eliteprospects.com/player/88699/tyler-lewington,367,20,60,80,0.22,707,49,9.2,26.7,35.9,0.1,True,False,False,nhl,NHL ↕ AHL,False
 Ryan Culkin,D,https://www.eliteprospects.com/player/88706/ryan-culkin,250,24,94,118,0.47,160,27,6.8,25.6,32.4,0.13,False,False,True,ahl,AHL ↕ ECHL,False
 Alexis Loiseau,C,https://www.eliteprospects.com/player/88710/alexis-loiseau,156,43,68,111,0.71,38,-11,11.9,19.0,30.9,0.2,False,False,False,slovakia,—,False
-Rob Schremp,C,https://www.eliteprospects.com/player/8876/rob-schremp,115,31,41,72,0.63,52,-15,13.2,17.2,30.4,0.26,False,False,False,del,NL ↕ DEL,False
+Rob Schremp,C,https://www.eliteprospects.com/player/8876/rob-schremp,115,31,41,72,0.63,52,-15,13.2,17.2,30.4,0.26,False,False,False,del,DEL ↕ NL,False
 Marek Daníček,RW,https://www.eliteprospects.com/player/887624/marek-danicek,11,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,czechia,—,False
 Christoph Schubert,D,https://www.eliteprospects.com/player/8877/christoph-schubert,39,6,9,15,0.38,78,6,2.2,3.3,5.6,0.14,False,False,False,del,—,False
 Rob Scuderi,D,https://www.eliteprospects.com/player/8878/rob-scuderi,81,0,13,13,0.16,16,11,0.0,11.3,11.3,0.14,False,False,False,ahl,—,False
@@ -19338,7 +19338,7 @@ Miko Malkamäki,D,https://www.eliteprospects.com/player/9267/miko-malkamaki,0,0,
 Chris Tierney,C,https://www.eliteprospects.com/player/92677/chris-tierney,732,95,190,285,0.39,155,-95,84.8,170.6,255.4,0.35,True,False,False,nl,—,True
 Troy Donnay,D,https://www.eliteprospects.com/player/92678/troy-donnay,172,8,32,40,0.23,192,6,2.2,8.6,10.8,0.06,False,False,False,echl,—,False
 Jarkko Näppilä,D,https://www.eliteprospects.com/player/9268/jarkko-nappila,48,0,9,9,0.19,20,-12,0.0,3.8,3.8,0.08,False,False,False,liiga,—,False
-Jesse Graham,D,https://www.eliteprospects.com/player/92681/jesse-graham,576,55,230,285,0.49,289,-7,25.5,100.8,126.3,0.22,True,False,False,slovakia,Slovakia ↕ NL,True
+Jesse Graham,D,https://www.eliteprospects.com/player/92681/jesse-graham,576,55,230,285,0.49,289,-7,25.5,100.8,126.3,0.22,True,False,False,slovakia,NL ↕ Slovakia,True
 Kurtis Gabriel,RW,https://www.eliteprospects.com/player/92683/kurtis-gabriel,347,32,25,57,0.16,652,-23,15.2,12.7,27.9,0.08,True,False,False,nhl,NHL ↕ AHL,False
 Niclas Lucenius,LW/C,https://www.eliteprospects.com/player/9271/niclas-lucenius,221,38,86,124,0.56,82,-28,15.3,33.6,48.9,0.22,False,False,True,slovakia,—,False
 Maxim Karpov,RW,https://www.eliteprospects.com/player/92711/maxim-karpov,494,84,146,230,0.47,97,79,52.1,90.5,142.6,0.29,True,False,False,khl,—,False
@@ -19475,7 +19475,7 @@ Phil Baltisberger,D,https://www.eliteprospects.com/player/94020/phil-baltisberge
 Xeno Büsser,D,https://www.eliteprospects.com/player/94024/xeno-busser,12,0,1,1,0.08,0,1,0.0,0.4,0.4,0.03,False,False,False,nl,—,False
 Corey Potter,D,https://www.eliteprospects.com/player/9404/corey-potter,200,11,43,54,0.27,207,21,4.4,17.0,21.4,0.11,False,False,True,del,—,False
 Matej Gardon,LW,https://www.eliteprospects.com/player/94060/matej-gardon,35,2,1,3,0.09,12,-9,0.7,0.4,1.1,0.03,False,False,False,czechia,—,True
-James Wisniewski,D,https://www.eliteprospects.com/player/9407/james-wisniewski,38,5,10,15,0.39,69,5,2.4,4.9,7.3,0.19,False,False,False,khl,AHL ↕ KHL,False
+James Wisniewski,D,https://www.eliteprospects.com/player/9407/james-wisniewski,38,5,10,15,0.39,69,5,2.4,4.9,7.3,0.19,False,False,False,khl,KHL ↕ AHL,False
 Brett Sterling,LW/RW,https://www.eliteprospects.com/player/9408/brett-sterling,106,26,28,54,0.51,86,20,11.4,12.3,23.8,0.22,False,False,False,ahl,—,False
 Tim Wallace,C/RW,https://www.eliteprospects.com/player/9409/tim-wallace,115,23,43,66,0.57,76,3,6.8,13.1,19.9,0.17,False,False,False,ahl,AHL ↕ ECHL,False
 T.J. Hensick,C/RW,https://www.eliteprospects.com/player/9410/t.j.-hensick,393,99,258,357,0.91,101,1,33.9,89.2,123.1,0.31,True,False,False,echl,—,False
@@ -19595,7 +19595,7 @@ Michael Huntebrinker,C,https://www.eliteprospects.com/player/95190/michael-hunte
 Mychal Monteith,D,https://www.eliteprospects.com/player/95191/mychal-monteith,9,0,1,1,0.11,2,-3,0.0,0.3,0.3,0.03,False,False,False,echl,—,False
 David Gaborcik,D,https://www.eliteprospects.com/player/95196/david-gaborcik,52,0,4,4,0.08,22,-10,0.0,1.1,1.1,0.02,False,False,False,slovakia,—,False
 Pierre-Alexandre Parenteau,RW,https://www.eliteprospects.com/player/9520/pierre-alexandre-parenteau,164,36,46,82,0.5,107,-13,34.9,42.2,77.1,0.47,False,False,False,khl,—,False
-Jared Aulin,C/RW,https://www.eliteprospects.com/player/9521/jared-aulin,38,1,13,14,0.37,8,-15,0.4,4.9,5.3,0.14,False,False,False,nl,NL ↕ DEL,False
+Jared Aulin,C/RW,https://www.eliteprospects.com/player/9521/jared-aulin,38,1,13,14,0.37,8,-15,0.4,4.9,5.3,0.14,False,False,False,nl,DEL ↕ NL,False
 Jay Harrison,D,https://www.eliteprospects.com/player/9522/jay-harrison,18,3,2,5,0.28,17,-6,1.3,0.9,2.2,0.12,False,False,False,ahl,—,False
 Kayle Doetzel,D,https://www.eliteprospects.com/player/95222/kayle-doetzel,275,8,30,38,0.14,287,-5,2.2,8.8,10.9,0.04,True,False,False,slovakia,—,False
 Shane Bennett,F,https://www.eliteprospects.com/player/95244/shane-bennett,5,0,0,0,0.0,2,2,0.0,0.0,0.0,0.0,False,False,False,echl,—,False
@@ -20060,7 +20060,7 @@ Daniels Serkins,C/LW,manual_daniels_serkins_c,2,0,0,0,0.0,0,0,0.0,0.0,0.0,0.0,Fa
 Daniil Kazulayev,RW/LW,manual_daniil_kazulayev_rw,14,2,2,4,0.29,0,5,1.2,1.2,2.5,0.18,False,False,False,khl,—,True
 Daniil Krishtofik,D,manual_daniil_krishtofik_d,8,0,0,0,0.0,0,2,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
 Daniil Petrenko,RW/LW,manual_daniil_petrenko_rw,1,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
-Daniil Prokhorov,RW,manual_daniil_prokhorov_rw,24,1,0,1,0.04,2,-2,0.6,0.0,0.6,0.02,False,False,False,ahl,AHL ↕ KHL,True
+Daniil Prokhorov,RW,manual_daniil_prokhorov_rw,24,1,0,1,0.04,2,-2,0.6,0.0,0.6,0.02,False,False,False,ahl,KHL ↕ AHL,True
 Daniil Sobolev,D,manual_daniil_sobolev_d,39,1,2,3,0.08,20,-9,0.6,1.2,1.9,0.05,False,False,False,khl,—,True
 Danil Sysoyev,C,manual_danil_sysoyev_c,1,0,0,0,0.0,0,-1,0.0,0.0,0.0,0.0,False,False,False,khl,—,True
 Danila Dyadenkin,LW,manual_danila_dyadenkin_lw,20,2,1,3,0.15,6,2,1.2,0.6,1.9,0.1,False,False,False,khl,—,True
